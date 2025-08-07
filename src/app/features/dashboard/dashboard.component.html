@@ -1,0 +1,334 @@
+<header class="jumbotron jumbo">
+  <div class="grid--md grid-container--xl">
+    <div class="column--4">
+      <h1>Dashboard</h1>
+      <!--p>The <span class="no-wrap">NTT DATA</span> UI Pattern Library is designed to set a new bar for simplicity and consistency across all <span class="no-wrap">NTT DATA</span> web applications, while providing you with plug-and-play design and code.</p-->
+    </div>
+    <div class="column--2">
+      <button class="btn btn-primary btn-block bottom-gutter" (click)="onLogout()">Logout</button>
+    </div>
+  </div>
+</header>
+<section class="content-area" id="datatables">
+  <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter">
+    <div class="column--xs-12 column--xl-12">
+      <div class="bottom-gutter">
+
+        <button class="btn btn-success" (click)="openModal()">➕ Nueva mención</button>
+
+      </div>
+
+      <div class="table-responsive" style="max-height: 600px">
+        <table class="table table-striped table-sticky--head table-sticky--foot table-sticky--start table-sticky--end">
+          <thead>
+            <tr role="row">
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">ID
+              </th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Title</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Detail</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Link</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Source</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Update date</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Publish date</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Ranking</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Media type</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Tags</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Country</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Language</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Audience</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Reach</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Interactions</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Notes</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Author name</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Author handle (&#64;username)</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Author URL</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Gender</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Age</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Bio</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                City</th>
+              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                Sentiment</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td colspan="24">Sticky foot</td>
+            </tr>
+          </tfoot>
+          <tbody>
+            <tr *ngFor="let mention of mentions; trackBy: trackById">
+              <td>{{ mention.id }}</td>
+              <td>{{ mention.Title }}</td>
+              <td>{{ mention.Detail }}</td>
+              <td>{{ mention.Link }}</td>
+              <td>{{ mention.Source }}</td>
+              <td>{{ mention['Update date'] }}</td>
+              <td>{{ mention['Publish date'] }}</td>
+              <td>{{ mention.Ranking }}</td>
+              <td>{{ mention['Media type'] }}</td>
+              <td>{{ mention.Tags }}</td>
+              <td>{{ mention.Country }}</td>
+              <td>{{ mention.Language }}</td>
+              <td>{{ mention.Audience }}</td>
+              <td>{{ mention.Reach }}</td>
+              <td>{{ mention.Interactions }}</td>
+              <td>{{ mention.Notes }}</td>
+              <td>{{ mention['Author name'] }}</td>
+              <td>{{ mention['Author handle (@username)'] }}</td>
+              <td>{{ mention['Author URL'] }}</td>
+              <td>{{ mention.Gender }}</td>
+              <td>{{ mention.Age }}</td>
+              <td>{{ mention.Bio }}</td>
+              <td>{{ mention.City }}</td>
+              <td>{{ mention.Sentiment }}<button class="btn btn-primary btn-block bottom-gutter"
+                  [routerLink]="['/full-content', mention.id]">Review</button></td>
+            </tr>
+            <tr *ngIf="mentions.length === 0">
+              <td colspan="24">There are no items.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Controles de paginación -->
+    <nav aria-label="Paginación" class="text-center top-gutter">
+      <ul class="pagination pagination-lg">
+        <li [class.disabled]="currentPage === 1">
+          <a (click)="previousPage()">&laquo; Anterior</a>
+        </li>
+        <li *ngFor="let page of totalPagesArray" [class.active]="page === currentPage">
+          <a (click)="goToPage(page)">{{ page }}</a>
+        </li>
+        <li [class.disabled]="currentPage === totalPages">
+          <a (click)="nextPage()">Siguiente &raquo;</a>
+        </li>
+      </ul>
+    </nav>
+
+
+
+      <div id="mentionModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <form (ngSubmit)="createMention()" #mentionForm="ngForm">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Nueva Mención</h4>
+              </div>
+
+              <div class="modal-body">
+                <div class="">
+                  <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter">
+                    <!-- 🟦 Contenido -->
+                    <fieldset class="column--xs-12 column--xl-12">
+                      <legend>Contenido</legend>
+    
+                      <div class="form-group">
+                        <label for="Title">Título</label>
+                        <input type="text" class="form-control" id="Title" name="Title" [(ngModel)]="newMention.Title"
+                          required />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Detail">Detalle</label>
+                        <textarea class="form-control" id="Detail" name="Detail" rows="3"
+                          [(ngModel)]="newMention.Detail"></textarea>
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Source">Fuente</label>
+                        <input type="text" class="form-control" id="Source" name="Source" [(ngModel)]="newMention.Source" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Link">Enlace</label>
+                        <input type="url" class="form-control" id="Link" name="Link" [(ngModel)]="newMention.Link" />
+                      </div>
+                    </fieldset>
+
+                    <!-- 🟩 Metadatos -->
+                    <fieldset class="column--xs-12 column--xl-6">
+                      <legend>Metadatos</legend>
+    
+                      <div class="form-group">
+                        <label for="UpdateDate">Fecha de actualización</label>
+                        <input type="text" class="form-control" id="UpdateDate" name="UpdateDate"
+                          [(ngModel)]="newMention['Update date']" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="PublishDate">Fecha de publicación</label>
+                        <input type="text" class="form-control" id="PublishDate" name="PublishDate"
+                          [(ngModel)]="newMention['Publish date']" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Sentiment">Sentimiento</label>
+                        <input type="text" class="form-control" id="Sentiment" name="Sentiment"
+                          [(ngModel)]="newMention.Sentiment" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Ranking">Ranking</label>
+                        <input type="number" class="form-control" id="Ranking" name="Ranking"
+                          [(ngModel)]="newMention.Ranking" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="MediaType">Tipo de medio</label>
+                        <input type="text" class="form-control" id="MediaType" name="MediaType"
+                          [(ngModel)]="newMention['Media type']" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Tags">Etiquetas</label>
+                        <input type="text" class="form-control" id="Tags" name="Tags" [(ngModel)]="newMention.Tags" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Country">País</label>
+                        <input type="text" class="form-control" id="Country" name="Country"
+                          [(ngModel)]="newMention.Country" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Language">Idioma</label>
+                        <input type="text" class="form-control" id="Language" name="Language"
+                          [(ngModel)]="newMention.Language" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Audience">Audiencia</label>
+                        <input type="text" class="form-control" id="Audience" name="Audience"
+                          [(ngModel)]="newMention.Audience" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Reach">Alcance</label>
+                        <input type="number" class="form-control" id="Reach" name="Reach" [(ngModel)]="newMention.Reach" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Interactions">Interacciones</label>
+                        <input type="text" class="form-control" id="Interactions" name="Interactions"
+                          [(ngModel)]="newMention.Interactions" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Notes">Notas</label>
+                        <textarea class="form-control" id="Notes" name="Notes" rows="2"
+                          [(ngModel)]="newMention.Notes"></textarea>
+                      </div>
+                    </fieldset>
+
+                     <!-- 🟨 Autor -->
+                    <fieldset class="column--xs-12 column--xl-6">
+                      <legend>Autor</legend>
+    
+                      <div class="form-group">
+                        <label for="AuthorName">Nombre del autor</label>
+                        <input type="text" class="form-control" id="AuthorName" name="AuthorName"
+                          [(ngModel)]="newMention['Author name']" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="AuthorHandle">&#64;username del autor</label>
+                        <input type="text" class="form-control" id="AuthorHandle" name="AuthorHandle"
+                          [(ngModel)]="newMention['Author handle (@username)']" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="AuthorURL">URL del autor</label>
+                        <input type="url" class="form-control" id="AuthorURL" name="AuthorURL"
+                          [(ngModel)]="newMention['Author URL']" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Gender">Género</label>
+                        <input type="text" class="form-control" id="Gender" name="Gender" [(ngModel)]="newMention.Gender" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Age">Edad</label>
+                        <input type="text" class="form-control" id="Age" name="Age" [(ngModel)]="newMention.Age" />
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="Bio">Biografía</label>
+                        <textarea class="form-control" id="Bio" name="Bio" rows="2" [(ngModel)]="newMention.Bio"></textarea>
+                      </div>
+    
+                      <div class="form-group">
+                        <label for="City">Ciudad</label>
+                        <input type="text" class="form-control" id="City" name="City" [(ngModel)]="newMention.City" />
+                      </div>
+    
+                    </fieldset>
+    
+                  </div>
+                </div>
+
+
+              </div>
+
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Crear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

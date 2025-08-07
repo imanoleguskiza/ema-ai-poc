@@ -1,0 +1,103 @@
+@if (isLoading) {
+<div>Cargando detalle...</div>
+}
+@if (!isLoading && mention) {
+<header class="jumbotron jumbo">
+    <div class="grid--md grid-container--xl">
+        <div class="column--10">
+            @if (isEditing) {
+            <input class="form-control" [(ngModel)]="editableMention!.Title" />
+            <textarea class="form-control" rows="4" [(ngModel)]="editableMention!.Detail"></textarea>
+            } @else {
+            <h1>{{ mention.Title }}</h1>
+            <p>{{ mention.Detail }}</p>
+            }
+        </div>
+    </div>
+</header>
+<section class="content-area">
+    <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter">
+        <div class="column--xs-12 column--xl-6">
+            <p><strong>Fuente:</strong>
+                @if (isEditing) {
+                <input class="form-control" [(ngModel)]="editableMention!.Source" />
+                } @else {
+                {{ mention.Source }}
+                }
+            </p>
+
+            <p><strong>Enlace:</strong>
+                @if (isEditing) {
+                <input class="form-control" [(ngModel)]="editableMention!.Link" />
+                } @else {
+                <a [href]="mention.Link" target="_blank">{{ mention.Link }}</a>
+                }
+            </p>
+            <p><strong>Fecha de actualización:</strong> {{ mention['Update date'] }}</p>
+            <p><strong>Fecha de publicación:</strong> {{ mention['Publish date'] }}</p>
+            <p><strong>Sentimiento:</strong>
+                @if (isEditing) {
+                <input class="form-control" [(ngModel)]="editableMention!.Sentiment" />
+                } @else {
+                {{ mention.Sentiment }}
+                }
+            </p>
+
+            <p><strong>Ranking:</strong> {{ mention.Ranking }}</p>
+            <p><strong>Tipo de medio:</strong> {{ mention['Media type'] }}</p>
+            <p><strong>Etiquetas:</strong>
+                @if (isEditing) {
+                <input class="form-control" [(ngModel)]="editableMention!.Tags" />
+                } @else {
+                {{ mention.Tags }}
+                }
+            </p>
+            <p><strong>País:</strong> {{ mention.Country }}</p>
+            <p><strong>Idioma:</strong> {{ mention.Language }}</p>
+            <p><strong>Audiencia:</strong> {{ mention.Audience }}</p>
+        </div>
+        <div class="column--xs-12 column--xl-6">
+            <p><strong>Alcance:</strong> {{ mention.Reach }}</p>
+            <p><strong>Interacciones:</strong> {{ mention.Interactions }}</p>
+            <p><strong>Notas:</strong> {{ mention.Notes }}</p>
+            <p><strong>Autor:</strong> {{ mention['Author name'] }}</p>
+            <p><strong>Handle del autor:</strong> {{ mention['Author handle (@username)'] }}</p>
+            <p><strong>URL del autor: </strong>
+                <a [href]="mention['Author URL']" target="_blank">{{ mention['Author URL'] }}</a>
+            </p>
+            <p><strong>Género:</strong> {{ mention.Gender }}</p>
+            <p><strong>Edad:</strong> {{ mention.Age }}</p>
+            <p><strong>Biografía:</strong> {{ mention.Bio }}</p>
+            <p><strong>Ciudad:</strong> {{ mention.City }}</p>
+        </div>
+        <div class="column--xs-12 column--xl-12">
+            <button class="btn btn-secondary mt-3" (click)="goBack()">← Volver al dashboard</button>
+            <div class="top-gutter">
+                @if (!isEditing) {
+                <button class="btn btn-primary" (click)="startEdit()">✏️ Editar</button>
+                }
+                @if (isEditing) {
+                <button class="btn btn-success mr-2" (click)="saveChanges()">💾 Guardar</button>
+                }
+                @if (isEditing) {
+                <button class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>
+                }
+                @if (!isEditing) {
+                <button class="btn btn-danger ml-2" (click)="deleteMention()">🗑️ Eliminar</button>
+                }
+                <button class="btn btn-outline-dark ml-2" (click)="goBack()">← Volver</button>
+            </div>
+            @if (message) {
+            <p class="text-success">{{ message }}</p>
+            }
+        </div>
+    </div>
+</section>
+}
+
+@if (!isLoading && !mention) {
+<div>
+    <p>No se encontró el contenido.</p>
+    <button class="btn btn-secondary" (click)="goBack()">← Volver</button>
+</div>
+}
