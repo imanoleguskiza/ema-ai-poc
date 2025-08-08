@@ -9,6 +9,3 @@
 
 [[plugins]]
   package = "@netlify/angular-runtime"
-
-  [plugins.inputs]
-    edge_functions = false
