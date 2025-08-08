@@ -1,3 +1,8 @@
 [build]
-command = "npm run build"
-publish = "dist/angular-starter/browser"
+  command = "npm run build:ssr"
+  publish = "dist/angular-starter/browser"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["dist/angular-starter/**"]
