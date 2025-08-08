@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 
 export interface Mention {
@@ -35,7 +35,7 @@ export interface Mention {
 
 export class SupabaseService {
 
-    private supabase: SupabaseClient;
+    supabase?: any;
 
     constructor() {
         this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
