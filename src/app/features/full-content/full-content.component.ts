@@ -79,4 +79,3 @@ export class FullContentComponent implements OnInit {
   }
 
 }
-
