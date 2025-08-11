@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && sed -i '1iglobalThis.global = globalThis' $(grep -rl \"node-fetch\" -l node_modules/@supabase)",
+    "build": "ng build && sed -i '1iglobalThis.global = globalThis' ./node_modules/@supabase/supabase-js/dist/module/lib/fetch.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
