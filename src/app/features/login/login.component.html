@@ -1,14 +1,6 @@
-<header class="jumbotron jumbo">
-  <div class="grid--md grid-container--xl">
-    <div class="column--4">
-      <h1>Loggin</h1>
-      <!--p>The <span class="no-wrap">NTT DATA</span> UI Pattern Library is designed to set a new bar for simplicity and consistency across all <span class="no-wrap">NTT DATA</span> web applications, while providing you with plug-and-play design and code.</p-->
-    </div>
-  </div>
-</header>
 <section class="content-area" id="datatables">
-  <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter">
-    <div class="column--xs-12 column--xl-7">
+  <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter top-gutter">
+    <div class="column--xs-12 column--xl-12">
       <form (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label class="control-label" for="usernameInput">Username <span class="info">(or email)</span> <span class="tooltip-info" data-toggle="tooltip" title="Enter Username or email"></span></label>
@@ -22,7 +14,7 @@
           <p class="help-block">Minimum of 6 characters including numerics</p>
         </div>
         <div class="col-xs-12 col-md-6 col-lg-4 text-center px-0">
-          <button class="btn btn-primary btn-block bottom-gutter " type="submit">Login</button>
+          <button class="btn btn-primary btn-block bottom-gutter " type="submit"><span class="fa fa-sign-in" aria-hidden="true"></span>Login</button>
         </div>
       </form>
     </div>

@@ -32,13 +32,22 @@ export class DashboardComponent implements OnInit {
     private supabaseService: SupabaseService
   ) { }
 
+  get startItem(): number {
+    return this.totalRows === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  get endItem(): number {
+    const end = this.currentPage * this.pageSize;
+    return end > this.totalRows ? this.totalRows : end;
+  }
+
   async ngOnInit(): Promise<void> {
     await this.getTotalCount();
     await this.loadPage(this.currentPage);
     // this.loadThings();
   }
 
-    async getTotalCount() {
+  async getTotalCount() {
     const { count, error } = await this.supabaseService.getMentionCount();
     if (error) {
       console.error('Error obteniendo el total:', error);
@@ -51,7 +60,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-    async loadPage(page: number) {
+  async loadPage(page: number) {
     const from = (page - 1) * this.pageSize;
     const to = from + this.pageSize - 1;
 
@@ -89,23 +98,23 @@ export class DashboardComponent implements OnInit {
   }
 
   async createMention() {
-  const nextId = await this.supabaseService.getNextMentionId();
+    const nextId = await this.supabaseService.getNextMentionId();
 
-  const mentionWithId = {
-    id: nextId,
-    ...this.newMention
-  };
+    const mentionWithId = {
+      id: nextId,
+      ...this.newMention
+    };
 
-  const created = await this.supabaseService.createMention(mentionWithId);
+    const created = await this.supabaseService.createMention(mentionWithId);
 
-  if (created) {
-    $('#mentionModal').modal('hide');
-    this.mentions = await this.supabaseService.getMentions();
-    this.router.navigate(['/full-content', created.id]);
-  } else {
-    alert('❌ Error al crear la mención. Revisá consola.');
+    if (created) {
+      $('#mentionModal').modal('hide');
+      this.mentions = await this.supabaseService.getMentions();
+      this.router.navigate(['/full-content', created.id]);
+    } else {
+      alert('❌ Error al crear la mención. Revisá consola.');
+    }
   }
-}
 
 
   onLogout() {

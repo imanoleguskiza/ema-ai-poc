@@ -78,5 +78,46 @@ export class FullContentComponent implements OnInit {
     }
   }
 
+  async procesarMention() {
+    if (!this.mention) return;
+
+    try {
+      const response = await fetch('https://prototypepocfightingdisinformation-vertex.app.dev.techhubnttdata.com/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': 'e4b1c2a7-9f3d-4e2a-8c6a-5b7d2e1f4a3b',
+          
+        },
+        body: JSON.stringify({ id: this.mention.Detail })
+      });
+
+      if (!response.ok) throw new Error('Error en el request');
+
+      const result = await response.json();
+
+      console.log(result);
+
+      // // 2. Actualizar la mención en Supabase con los datos de la respuesta
+      // const updatedMention = {
+      //   ...this.mention,
+      //   Status: 'Procesado', // ⚠️ Asegurate de que el campo exista en tu tabla
+      //   // otros campos que quieras actualizar desde `result`
+      // };
+
+      // const success = await this.supabaseService.updateMention(this.mention.id, updatedMention);
+
+      // if (success) {
+      //   this.mention = updatedMention;
+      //   this.message = '✅ Procesado correctamente.';
+      // } else {
+      //   this.message = '❌ No se pudo guardar el estado de "procesado".';
+      // }
+    } catch (error) {
+      console.error(error);
+      this.message = '❌ Error al procesar la mención.';
+    }
+  }
+
 }
 

@@ -12,12 +12,17 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
 
+  email = '';
+  password = '';
+
   isLoggedIn$ = this.auth.isLoggedIn.asObservable();
 
   constructor(private auth: AuthService, private router: Router) {}
 
   goLogin() {
-    this.router.navigate(['/login']);
+    this.auth.login(this.email, this.password).subscribe(() => {
+      this.router.navigate(['/dashboard']);
+    });
   }
 
   onLogout() {
