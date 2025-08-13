@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
   async getTotalCount() {
     const { count, error } = await this.supabaseService.getMentionCount();
     if (error) {
-      console.error('Error obteniendo el total:', error);
+      console.error('Error getting the total:', error);
       this.totalRows = 0;
       this.totalPages = 1;
     } else {
@@ -68,7 +68,7 @@ export class DashboardComponent implements OnInit {
 
     const { data, error } = await this.supabaseService.getMentionsPaged(from, to);
     if (error) {
-      console.error('Error cargando página:', error);
+      console.error('Error loading page:', error);
       this.mentions = [];
     } else {
       this.mentions = data || [];
@@ -112,7 +112,7 @@ export class DashboardComponent implements OnInit {
       this.mentions = await this.supabaseService.getMentions();
       this.router.navigate(['/full-content', created.id]);
     } else {
-      alert('❌ Error al crear la mención. Revisá consola.');
+      alert('❌ Error creating mention. Check console.');
     }
   }
 

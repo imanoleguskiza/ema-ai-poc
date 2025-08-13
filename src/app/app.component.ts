@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterOutlet],
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
 })
 export class AppComponent {
 

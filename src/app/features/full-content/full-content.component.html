@@ -1,11 +1,12 @@
 @if (isLoading) {
-    <header class="jumbotron jumbo">
-        <div class="grid--md grid-container--xl">
-            <div class="column--10">
-                <div><span class="loader-spinner loader-sm fade in" id="exampleLoaderSpinner"></span> Loading details...</div>
+<header class="jumbotron jumbo">
+    <div class="grid--md grid-container--xl">
+        <div class="column--10">
+            <div><span class="loader-spinner loader-sm fade in" id="exampleLoaderSpinner"></span> Loading details...
             </div>
         </div>
-    </header>
+    </div>
+</header>
 }
 @if (!isLoading && mention) {
 <header class="jumbotron jumbo">
@@ -17,13 +18,49 @@
             } @else {
             <h1>{{ mention.Title }}</h1>
             <p>{{ mention.Detail }}</p>
+            @if (mention.Processed == true) {
+            <div class="badge bg-success"><span class="fa fa-check-circle" aria-hidden="true"></span> Processed</div>
+            }
+            @if (mention.Processed == false) {
+            <div class="badge bg-info"><span class="fa fa-times-circle" aria-hidden="true"></span> Not processed</div>
+            }
             }
         </div>
     </div>
 </header>
 <section class="content-area">
+    <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter bg-primary text-white d-flex justify-content-between align-center">
+        @if (mention.Processed == true) {
+            <div class="column--xs-12 column--sm-10">
+                <h3 class="top-gutter bottom-gutter">State: <span class="fa fa-check-circle" aria-hidden="true"></span>
+                    Mention processed</h3>
+                <p>Result: {{ mention.Justification }}</p>
+            </div>
+            <div class="column--xs-12 column--sm-2">
+                <button class="btn btn-success" (click)="processMention()"><span class="fa fa-play-circle"
+                        aria-hidden="true"></span>AI Process</button>
+            </div>
+        }
+        @if (mention.Processed == false) {
+            <div class="column--xs-12 column--sm-10">
+                <h3 class="top-gutter bottom-gutter">State: <span class="fa fa-times-circle" aria-hidden="true"></span>
+                    Mention pending processing</h3>
+            </div>
+            <div class="column--xs-12 column--sm-2">
+                <button class="btn btn-success" (click)="processMention()"><span class="fa fa-play-circle"
+                        aria-hidden="true"></span>AI Process</button>
+            </div>
+        }
+    </div>
     <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter">
-        <div class="column--xs-12 column--xl-6">
+        <div class="column--xs-12 column--xl-12">
+            @if (message) {
+                <div class="alert alert-{{alert}} alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ message }}</div>
+            }
+        </div>
+    </div>
+    <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter">
+        <div class="column--xs-12 column--xl-10">
             <p><strong>Source:</strong>
                 @if (isEditing) {
                 <input class="form-control" [(ngModel)]="editableMention!.Source" />
@@ -39,71 +76,66 @@
                 <a [href]="mention.Link" target="_blank">{{ mention.Link }}</a>
                 }
             </p>
-            <p><strong>Update Date:</strong> {{ mention['Update date'] }}</p>
-            <p><strong>Publish Date:</strong> {{ mention['Publish date'] }}</p>
-            <p><strong>Sentiment:</strong>
-                @if (isEditing) {
-                <input class="form-control" [(ngModel)]="editableMention!.Sentiment" />
-                } @else {
-                {{ mention.Sentiment }}
-                }
-            </p>
-
-            <p><strong>Ranking:</strong> {{ mention.Ranking }}</p>
-            <p><strong>Media Type:</strong> {{ mention['Media type'] }}</p>
-            <p><strong>Tags:</strong>
-                @if (isEditing) {
-                <input class="form-control" [(ngModel)]="editableMention!.Tags" />
-                } @else {
-                {{ mention.Tags }}
-                }
-            </p>
-            <p><strong>Country:</strong> {{ mention.Country }}</p>
-            <p><strong>Language:</strong> {{ mention.Language }}</p>
-            <p><strong>Audience:</strong> {{ mention.Audience }}</p>
-        </div>
-        <div class="column--xs-12 column--xl-6">
-            <p><strong>Reach:</strong> {{ mention.Reach }}</p>
-            <p><strong>Interactions:</strong> {{ mention.Interactions }}</p>
-            <p><strong>Notes:</strong> {{ mention.Notes }}</p>
-            <p><strong>Author:</strong> {{ mention['Author name'] }}</p>
-            <p><strong>Author Handle:</strong> {{ mention['Author handle (@username)'] }}</p>
-            <p><strong>Author URL: </strong>
-                <a [href]="mention['Author URL']" target="_blank">{{ mention['Author URL'] }}</a>
-            </p>
-            <p><strong>Gender:</strong> {{ mention.Gender }}</p>
-            <p><strong>Age:</strong> {{ mention.Age }}</p>
-            <p><strong>Biography:</strong> {{ mention.Bio }}</p>
-            <p><strong>City:</strong> {{ mention.City }}</p>
-        </div>
-        <div class="column--xs-12 column--xl-12">
-            <button class="btn btn-secondary mt-3" (click)="goBack()">← Back to Dashboard</button>
-            <div class="top-gutter">
-                @if (!isEditing) {
-                    <!--button class="btn btn-warning ml-2"
-                        (click)="procesarMention()"
-                        [disabled]="mention.Status === 'Procesado'">
-                        🚀 Procesar
-                    </button-->
-                    <button class="btn btn-warning ml-2" (click)="procesarMention()">🚀 Procesar</button>
-                }
-                @if (!isEditing) {
-                <button class="btn btn-primary" (click)="startEdit()">✏️ Edit</button>
-                }
-                @if (isEditing) {
-                <button class="btn btn-success mr-2" (click)="saveChanges()">💾 Save</button>
-                }
-                @if (isEditing) {
-                <button class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
-                }
-                @if (!isEditing) {
-                <button class="btn btn-danger ml-2" (click)="deleteMention()">🗑️ Delete</button>
-                }
-                <button class="btn btn-outline-dark ml-2" (click)="goBack()">← Back</button>
-            </div>
-            @if (message) {
-            <p class="text-success">{{ message }}</p>
+            @if (mention.Tags) {
+                <p><strong>Tags:</strong></p>
+                <ng-container *ngFor="let tag of getTagsArray(mention.Tags)">
+                    <span class="badge mr-1">{{ tag }}</span>
+                </ng-container>
             }
+            
+            <div class="accordion-group top-gutter" data-accordion-group>
+                <div class="accordion accordion-sm">
+                    <div class="accordion-heading collapsed" data-toggle="collapse">
+                        <h4>More details...</h4>
+                    </div>
+                    <div class="accordion-content collapse">
+                        <div class="top-gutter bottom-gutter">
+                            <p><strong>Update Date:</strong> {{ mention['Update date'] }}</p>
+                            <p><strong>Publish Date:</strong> {{ mention['Publish date'] }}</p>
+                            <p><strong>Sentiment:</strong> {{ mention.Sentiment }} </p>                     
+                            <p><strong>Ranking:</strong> {{ mention.Ranking }}</p>
+                            <p><strong>Media Type:</strong> {{ mention['Media type'] }}</p>
+                            <p><strong>Country:</strong> {{ mention.Country }}</p>
+                            <p><strong>Language:</strong> {{ mention.Language }}</p>
+                            <p><strong>Audience:</strong> {{ mention.Audience }}</p>
+                            <p><strong>Reach:</strong> {{ mention.Reach }}</p>
+                            <p><strong>Interactions:</strong> {{ mention.Interactions }}</p>
+                            <p><strong>Notes:</strong> {{ mention.Notes }}</p>
+                            <p><strong>Author:</strong> {{ mention['Author name'] }}</p>
+                            <p><strong>Author Handle:</strong> {{ mention['Author handle (@username)'] }}</p>
+                            <p><strong>Author URL: </strong>
+                                <a [href]="mention['Author URL']" target="_blank">{{ mention['Author URL'] }}</a>
+                            </p>
+                            <p><strong>Gender:</strong> {{ mention.Gender }}</p>
+                            <p><strong>Age:</strong> {{ mention.Age }}</p>
+                            <p><strong>Biography:</strong> {{ mention.Bio }}</p>
+                            <p><strong>City:</strong> {{ mention.City }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column--xs-12 column--xl-2">
+            <div style="display: flex; flex-direction: column; align-items:stretch; justify-content: stretch;">
+                @if (!isEditing) {
+                <button class="btn btn-primary" style="margin-bottom: 1rem;" (click)="startEdit()"><span
+                        class="fa fa-pencil" aria-hidden="true"></span>Edit</button>
+                }
+                @if (isEditing) {
+                <button class="btn btn-success" style="margin-bottom: 1rem;" (click)="saveChanges()"><span
+                        class="fa fa-floppy-o" aria-hidden="true"></span>Save</button>
+                }
+                @if (isEditing) {
+                <button class="btn btn-danger" style="margin-bottom: 1rem;" (click)="cancelEdit()"><span
+                        class="fa fa-ban" aria-hidden="true"></span>Cancel</button>
+                }
+                @if (!isEditing) {
+                <button class="btn btn-danger" style="margin-bottom: 1rem;" (click)="deleteMention()"><span
+                        class="fa fa-trash" aria-hidden="true"></span>Delete</button>
+                }
+                <button class="btn btn-outline-dark" style="margin-bottom: 1rem;" (click)="goBack()"><span
+                        class="fa fa-angle-left" aria-hidden="true"></span>Back</button>
+            </div>
         </div>
     </div>
 </section>
@@ -112,6 +144,6 @@
 @if (!isLoading && !mention) {
 <div>
     <p>Content not found.</p>
-    <button class="btn btn-secondary" (click)="goBack()">← Back</button>
+    <button class="btn btn-secondary" style="margin-bottom: 1rem;" (click)="goBack()">← Back</button>
 </div>
 }

@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+.badge {
+    padding: 5px 8px;
+    height: auto;
+    border-radius: 16px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.align-center {
+    align-items: center;
+}

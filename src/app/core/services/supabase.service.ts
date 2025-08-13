@@ -26,6 +26,9 @@ export interface Mention {
   Age?: string;
   Bio?: string;
   City?: string;
+  Classification?: string;
+  Processed?: boolean;
+  Justification?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -63,7 +66,7 @@ export class SupabaseService {
       }
       return (data as Mention[]) || [];
     } catch (e) {
-      console.error('Error inesperado al obtener menciones:', e);
+      console.error('Unexpected error while getting mentions:', e);
       return [];
     }
   }
@@ -82,7 +85,7 @@ export class SupabaseService {
       .from('mentions')
       .update(updatedFields)
       .eq('id', id);
-    if (error) console.error('Error actualizando mención:', error);
+    if (error) console.error('Error updating mention:', error);
     return !error;
   }
 
@@ -90,7 +93,7 @@ export class SupabaseService {
     const supabase = await this.getClient();
     const { data, error } = await supabase.from('mentions').insert([mention]).select().single();
     if (error) {
-      console.error('Error creando mención:', error);
+      console.error('Error creating mention:', error);
       return null;
     }
     return data || null;
@@ -99,7 +102,7 @@ export class SupabaseService {
   async deleteMention(id: number): Promise<boolean> {
     const supabase = await this.getClient();
     const { error } = await supabase.from('mentions').delete().eq('id', id);
-    if (error) console.error('Error eliminando mención:', error);
+    if (error) console.error('Error deleting mention:', error);
     return !error;
   }
 
