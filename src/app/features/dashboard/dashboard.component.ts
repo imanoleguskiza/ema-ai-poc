@@ -26,6 +26,19 @@ export class DashboardComponent implements OnInit {
   totalRows = 0;
   totalPagesArray: number[] = [];
 
+  filters = {
+    mediaType: '',
+    classification: '',
+    processed: ''
+  };
+
+  mediaTypes: string[] = [];
+  classifications: string[] = [];
+
+  sortColumn = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
+
+
   constructor(
     private auth: AuthService,
     private router: Router,
@@ -42,9 +55,7 @@ export class DashboardComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.getTotalCount();
-    await this.loadPage(this.currentPage);
-    // this.loadThings();
+    await this.applyFilters();
   }
 
   async getTotalCount() {
@@ -60,20 +71,72 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  originalMentions: Mention[] = [];
+
   async loadPage(page: number) {
     const from = (page - 1) * this.pageSize;
     const to = from + this.pageSize - 1;
 
     this.currentPage = page;
 
-    const { data, error } = await this.supabaseService.getMentionsPaged(from, to);
+    const { data, error } = await this.supabaseService.getMentionsFiltered(
+      from, to,
+      this.filters,
+      this.sortColumn,
+      this.sortDirection
+    );
+
     if (error) {
       console.error('Error loading page:', error);
       this.mentions = [];
     } else {
       this.mentions = data || [];
+      this.extractUniqueValues(); // útil para rellenar select de filtros
     }
   }
+
+
+  async applyFilters() {
+    this.currentPage = 1;
+
+    const { count, error } = await this.supabaseService.getFilteredCount(this.filters);
+    if (error) {
+      console.error('Error getting filtered count:', error);
+      this.totalRows = 0;
+      this.totalPages = 1;
+      this.totalPagesArray = [1];
+    } else {
+      this.totalRows = count;
+      this.totalPages = Math.ceil(this.totalRows / this.pageSize);
+      this.totalPagesArray = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    }
+
+    await this.loadPage(this.currentPage);
+  }
+
+  sortBy(column: string) {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.loadPage(this.currentPage);
+  }
+
+  extractUniqueValues() {
+    const mediaSet = new Set<string>();
+    const classifSet = new Set<string>();
+
+    for (const m of this.mentions) {
+      if (m['Media type']) mediaSet.add(m['Media type']);
+      if (m.Classification) classifSet.add(m.Classification);
+    }
+
+    this.mediaTypes = Array.from(mediaSet).sort();
+    this.classifications = Array.from(classifSet).sort();
+  }
+
 
   previousPage() {
     if (this.currentPage > 1) this.loadPage(this.currentPage - 1);

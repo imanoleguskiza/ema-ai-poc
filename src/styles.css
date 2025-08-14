@@ -17,3 +17,29 @@
 .align-center {
     align-items: center;
 }
+
+th.sorting:hover {
+    background-color: var(--gray-lightest);
+    cursor: pointer;
+}
+
+.td-big p {
+    max-width: 600px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.td-medium p {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.td-small p {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}

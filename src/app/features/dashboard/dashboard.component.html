@@ -8,127 +8,145 @@
         </button>
       </div>
     </div>
+    <!-- 🏁 FILTROS EN LA VISTA -->
+    <div class="column--xs-12 column--xl-12 mb-3">
+      <div class="row">
+        <div class="col-md-3">
+          <label>Media Type:</label>
+          <select class="form-control" [(ngModel)]="filters.mediaType" (change)="applyFilters()">
+            <option value="">All</option>
+            <option *ngFor="let type of mediaTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label>Classification:</label>
+          <select class="form-control" [(ngModel)]="filters.classification" (change)="applyFilters()">
+            <option value="">All</option>
+            <option *ngFor="let classif of classifications" [value]="classif">{{ classif }}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label>Processed:</label>
+          <select class="form-control" [(ngModel)]="filters.processed" (change)="applyFilters()">
+            <option value="">All</option>
+            <option [value]="true">Yes</option>
+            <option [value]="false">No</option>
+          </select>
+        </div>
+      </div>
+    </div>
     <div class="column--xs-12 column--xl-12">
       <div class="table-responsive" style="max-height: 600px">
         <table class="table table-striped table-sticky--head table-sticky--start table-sticky--end">
           <thead>
             <tr role="row">
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">ID
-              </th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('id')">ID <span *ngIf="sortColumn === 'id'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
-                Title</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Title')">Title <span *ngIf="sortColumn === 'Title'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Detail</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 External link</th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
-                Source</th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Source')">Source <span *ngIf="sortColumn === 'Source'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
-                Update date</th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Update date')">Update date <span *ngIf="sortColumn === 'Update date'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
-                Publish date</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Publish date')">Publish date <span *ngIf="sortColumn === 'Publish date'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Ranking</th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
-                Media type</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Media type')">Media type <span *ngIf="sortColumn === 'Media type'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Tags</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Country</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Language</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Audience</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Reach</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Interactions</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Notes</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Author name</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Author handle (&#64;username)</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Author URL</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Gender</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Age</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Bio</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 City</th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
-                Sentiment</th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Sentiment')">Sentiment <span *ngIf="sortColumn === 'Sentiment'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-              aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
-                Classification</th>
+              aria-label="Content: activate to sort column ascending" (click)="sortBy('Classification')">Classification <span *ngIf="sortColumn === 'Classification'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-              aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
-                Processed</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-              aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              aria-label="Content: activate to sort column ascending"  (click)="sortBy('Processed')">Processed <span *ngIf="sortColumn === 'Processed'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+              aria-label="Content: activate to sort column ascending">
                 Justification</th>
-              <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" style="width: 83.859px; max-width: 83.859px;">
+              <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
+                aria-label="Content: activate to sort column ascending">
                 Link</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let mention of mentions; trackBy: trackById" [ngClass]="{ 'bg-info text-white': mention.Processed == true }">
               <td>{{ mention.id }}</td>
-              <td>{{ mention.Title }}</td>
-              <td>{{ mention.Detail }}</td>
-              <td>{{ mention.Link }}</td>
+              <td class="td-big"><p>{{ mention.Title }}</p></td>
+              <td class="td-big"><p>{{ mention.Detail }}</p></td>
+              <td class="td-medium"><p>{{ mention.Link }}</p></td>
               <td>{{ mention.Source }}</td>
               <td>{{ mention['Update date'] }}</td>
               <td>{{ mention['Publish date'] }}</td>
               <td>{{ mention.Ranking }}</td>
               <td>{{ mention['Media type'] }}</td>
-              <td>{{ mention.Tags }}</td>
+              <td class="td-medium"><p>{{ mention.Tags }}</p></td>
               <td>{{ mention.Country }}</td>
               <td>{{ mention.Language }}</td>
               <td>{{ mention.Audience }}</td>
               <td>{{ mention.Reach }}</td>
               <td>{{ mention.Interactions }}</td>
               <td>{{ mention.Notes }}</td>
-              <td>{{ mention['Author name'] }}</td>
-              <td>{{ mention['Author handle (@username)'] }}</td>
-              <td>{{ mention['Author URL'] }}</td>
+              <td class="td-small"><p>{{ mention['Author name'] }}</p></td>
+              <td class="td-small"><p>{{ mention['Author handle (@username)'] }}</p></td>
+              <td class="td-small"><p>{{ mention['Author URL'] }}</p></td>
               <td>{{ mention.Gender }}</td>
               <td>{{ mention.Age }}</td>
-              <td>{{ mention.Bio }}</td>
+              <td class="td-medium"><p>{{ mention.Bio }}</p></td>
               <td>{{ mention.City }}</td>
               <td>{{ mention.Sentiment }}</td>
               <td>{{ mention.Classification }}</td>
               <td>{{ mention.Processed }}</td>
-              <td>{{ mention.Justification }}</td>
-              <td><button class="btn btn-primary btn-block bottom-gutter"
+              <td class="td-big"><p>{{ mention.Justification }}</p></td>
+              <td><button class="btn btn-info btn-sm btn-block"
                   [routerLink]="['/full-content', mention.id]"><span>Review</span><span class="fa fa-angle-right" aria-hidden="true"></span></button></td>
             </tr>
             <tr *ngIf="mentions.length === 0">
