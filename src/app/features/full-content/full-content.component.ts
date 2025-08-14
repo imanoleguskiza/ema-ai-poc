@@ -84,13 +84,13 @@ export class FullContentComponent implements OnInit {
     if (!this.mention) return;
 
     try {
-      const response = await fetch('https://prototypepocfightingdisinformation-vertex.app.dev.techhubnttdata.com/verify', {
+      const response = await fetch('https://prototypepocvertexdisinformation-vertex.app.dev.techhubnttdata.com/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'api-key': 'e4b1c2a7-9f3d-4e2a-8c6a-5b7d2e1f4a3b',
         },
-        body: JSON.stringify({ id: this.mention.Detail })
+        body: JSON.stringify({ statement: this.mention.Detail })
       });
 
       if (!response.ok) throw new Error('Error in the request');
@@ -98,23 +98,27 @@ export class FullContentComponent implements OnInit {
       const result = await response.json();
 
       console.log(result);
+      console.log(result.classification);
+      console.log(result.justification);
 
-      // // 2. Actualizar la mención en Supabase con los datos de la respuesta
-      // const updatedMention = {
-      //   ...this.mention,
-      //   Processed: true, // ⚠️ Asegurate de que el campo exista en tu tabla
-      //   // otros campos que quieras actualizar desde `result`
-      // };
+      
+      const updatedMention = {
+        ...this.mention,
+        Processed: true,
+        Classification: result.classification,
+        Justification: result.justification
+      };
 
-      // const success = await this.supabaseService.updateMention(this.mention.id, updatedMention);
+      const success = await this.supabaseService.updateMention(this.mention.id, updatedMention);
 
-      // if (success) {
-      //   this.mention = updatedMention;
-      //   this.alert = 'success';
-      //   this.message = '✅ Processed successfully.';
-      // } else {
-      //   this.message = '❌ The "processed" state could not be saved.';
-      // }
+      if (success) {
+        this.mention = updatedMention;
+        this.alert = 'success';
+        this.message = 'Processed successfully.';
+      } else {
+        this.alert = 'warning';
+        this.message = 'The "processed" state could not be saved.';
+      }
     } catch (error) {
       console.error(error);
       this.alert = 'danger';

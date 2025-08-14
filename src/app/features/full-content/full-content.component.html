@@ -29,21 +29,21 @@
     </div>
 </header>
 <section class="content-area">
-    <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter bg-primary text-white d-flex justify-content-between align-center">
+    <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter bg-primary d-flex justify-content-between align-center">
         @if (mention.Processed == true) {
             <div class="column--xs-12 column--sm-10">
-                <h3 class="top-gutter bottom-gutter">State: <span class="fa fa-check-circle" aria-hidden="true"></span>
-                    Mention processed</h3>
-                <p>Result: {{ mention.Justification }}</p>
+                <h3 class="top-gutter bottom-gutter">State: <span class="fa fa-check-circle text-success" aria-hidden="true"></span> Mention processed </h3>
+                <p><span class="h5">Classification: </span>{{ mention.Classification }}</p>
+                <p class="bottom-gutter"><span class="h5">Justification: </span>{{ mention.Justification }}</p>
             </div>
             <div class="column--xs-12 column--sm-2">
                 <button class="btn btn-success" (click)="processMention()"><span class="fa fa-play-circle"
-                        aria-hidden="true"></span>AI Process</button>
+                        aria-hidden="true"></span>EMA AI Process</button>
             </div>
         }
         @if (mention.Processed == false) {
             <div class="column--xs-12 column--sm-10">
-                <h3 class="top-gutter bottom-gutter">State: <span class="fa fa-times-circle" aria-hidden="true"></span>
+                <h3 class="top-gutter bottom-gutter">State: <span class="fa fa-times-circle text-warning" aria-hidden="true"></span>
                     Mention pending processing</h3>
             </div>
             <div class="column--xs-12 column--sm-2">

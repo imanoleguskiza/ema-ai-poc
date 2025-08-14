@@ -118,7 +118,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let mention of mentions; trackBy: trackById" [ngClass]="{ 'bg-info text-white': mention.Processed == true }">
+            <tr *ngFor="let mention of mentions; trackBy: trackById" [ngClass]="{ 'bg-success-light': mention.Processed == true }">
               <td>{{ mention.id }}</td>
               <td class="td-big"><p>{{ mention.Title }}</p></td>
               <td class="td-big"><p>{{ mention.Detail }}</p></td>

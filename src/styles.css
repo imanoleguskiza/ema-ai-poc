@@ -43,3 +43,7 @@ th.sorting:hover {
     text-overflow: ellipsis;
     margin: 0;
 }
+
+.bg-success-light td:first-child {
+    background-color: #d7f5e5;
+}
