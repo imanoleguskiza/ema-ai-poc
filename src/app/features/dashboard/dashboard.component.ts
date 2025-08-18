@@ -4,6 +4,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { SupabaseService, Mention } from '../../core/services/supabase.service';
 
 declare var $: any;
@@ -29,7 +30,8 @@ export class DashboardComponent implements OnInit {
   filters = {
     mediaType: '',
     classification: '',
-    processed: ''
+    processed: '',
+    title: ''
   };
 
   mediaTypes: string[] = [];
@@ -37,6 +39,9 @@ export class DashboardComponent implements OnInit {
 
   sortColumn = '';
   sortDirection: 'asc' | 'desc' = 'asc';
+
+  isLoading = false;
+  private titleInput$ = new Subject<string>();
 
 
   constructor(
@@ -55,7 +60,24 @@ export class DashboardComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    // 🆕 suscripción con debounce para la búsqueda por título
+    this.titleInput$
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe(() => {
+        // al cambiar el título, re-aplicamos filtros desde la página 1
+        this.applyFilters();
+      });
+
     await this.applyFilters();
+  }
+
+  // 🆕 handler del input de título
+  onTitleChange(value: string) {
+    this.filters.title = value || '';
+    this.titleInput$.next(this.filters.title);
   }
 
   async getTotalCount() {
@@ -78,6 +100,7 @@ export class DashboardComponent implements OnInit {
     const to = from + this.pageSize - 1;
 
     this.currentPage = page;
+    this.isLoading = true;
 
     const { data, error } = await this.supabaseService.getMentionsFiltered(
       from, to,
@@ -93,11 +116,14 @@ export class DashboardComponent implements OnInit {
       this.mentions = data || [];
       this.extractUniqueValues(); // útil para rellenar select de filtros
     }
+
+    this.isLoading = false;
   }
 
 
   async applyFilters() {
     this.currentPage = 1;
+    this.isLoading = true;
 
     const { count, error } = await this.supabaseService.getFilteredCount(this.filters);
     if (error) {
@@ -139,15 +165,15 @@ export class DashboardComponent implements OnInit {
 
 
   previousPage() {
-    if (this.currentPage > 1) this.loadPage(this.currentPage - 1);
+    if (!this.isLoading && this.currentPage > 1) this.loadPage(this.currentPage - 1);
   }
 
   nextPage() {
-    if (this.currentPage < this.totalPages) this.loadPage(this.currentPage + 1);
+    if (!this.isLoading && this.currentPage < this.totalPages) this.loadPage(this.currentPage + 1);
   }
 
   goToPage(page: number) {
-    this.loadPage(page);
+    if (!this.isLoading) this.loadPage(page);
   }
 
   async loadThings() {

@@ -15,6 +15,10 @@ export class FullContentComponent implements OnInit {
   editableMention: Mention | null = null;
   isLoading = true;
   isEditing = false;
+
+  // 🔹 Nuevo estado para el loading del botón de procesamiento
+  isProcessing = false;
+
   alert: string = 'info';
   message: string = '';
   procesadoResultado: any = null;
@@ -60,8 +64,10 @@ export class FullContentComponent implements OnInit {
       this.mention = this.editableMention;
       this.isEditing = false;
       this.message = '✅ Changes saved successfully.';
+      this.alert = 'success';
     } else {
       this.message = '❌ Error saving changes.';
+      this.alert = 'danger';
     }
   }
 
@@ -81,7 +87,12 @@ export class FullContentComponent implements OnInit {
   }
 
   async processMention() {
-    if (!this.mention) return;
+    if (!this.mention || this.isProcessing) return;
+
+    // 🔹 Empieza la animación de loading del botón
+    this.isProcessing = true;
+    this.alert = 'info';
+    this.message = 'Processing…';
 
     try {
       const response = await fetch('https://prototypepocvertexdisinformation-vertex.app.dev.techhubnttdata.com/verify', {
@@ -101,7 +112,6 @@ export class FullContentComponent implements OnInit {
       console.log(result.classification);
       console.log(result.justification);
 
-      
       const updatedMention = {
         ...this.mention,
         Processed: true,
@@ -123,6 +133,9 @@ export class FullContentComponent implements OnInit {
       console.error(error);
       this.alert = 'danger';
       this.message = 'Error processing mention.';
+    } finally {
+      // 🔹 Termina la animación de loading del botón
+      this.isProcessing = false;
     }
   }
 
@@ -135,4 +148,3 @@ export class FullContentComponent implements OnInit {
   }
 
 }
-

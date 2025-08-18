@@ -2,29 +2,29 @@
   <div class="site-search"></div>
   <nav class="navbar navbar-fixed-top">
     <ul class="nav navbar-nav navbar-left">
-      <li class="desktop-menu-toggle hidden-mobile"><a href="#" data-toggle="desktop-menu" title="Desktop menu" target="_self">
+      <!--li class="desktop-menu-toggle hidden-mobile"><a href="#" data-toggle="desktop-menu" title="Desktop menu" target="_self">
           <div class="hidden-closed">Close</div>
-          <div class="hidden-opened"></div></a></li>
+          <div class="hidden-opened"></div></a></li-->
       <li><a class="horizontal-logo" href="home.html" title="Return home" target="_self">
           <div class="logo-image" title="NTT DATA"></div>
-          <div class="logo-title"><span>EMA AI<br>PoC</span></div></a></li>
+          <div class="logo-title"><span>EMA AI PoC</span></div></a></li>
     </ul>
-    <ul class="nav navbar-nav navbar-center hidden-mobile">
+    <ul class="nav navbar-nav navbar-center">
       <li class="dropdown heading active" data-anchor-nav-dropdown="">
         
           @if (!(isLoggedIn$ | async)) {
             <a class="dropdown-toggle" href="/" aria-haspopup="false" tabindex="-1" target="_self">Loggin</a>
           }
           @if (isLoggedIn$ | async) {
-            <a class="dropdown-toggle" href="/" aria-haspopup="false" tabindex="-1" target="_self">Dashboard</a>
+            <a class="dropdown-toggle" href="/dashboard" aria-haspopup="false" tabindex="-1" target="_self">Dashboard</a>
           }
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li class="divider hidden-desktop" role="separator"></li>
+      <!--li class="divider hidden-desktop" role="separator"></li>
       <li class="mobile-menu-toggle hidden-desktop" data-toggle="mobile-menu">
         <button class="navbar-btn btn" type="button" title="Mobile menu"><i class="fa fa-bars" aria-hidden="true"></i></button>
-      </li>
+      </li-->
       @if (isLoggedIn$ | async) {
         <li style="display: flex; margin-top: 6px;">
           <button class="navbar-btn btn-link" (click)="onLogout()">

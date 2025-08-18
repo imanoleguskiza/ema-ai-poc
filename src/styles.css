@@ -47,3 +47,11 @@ th.sorting:hover {
 .bg-success-light td:first-child {
     background-color: #d7f5e5;
 }
+
+.btn-width-medium {
+    min-width: 160px;
+}
+
+.alert:before {
+    line-height: 42px;
+}

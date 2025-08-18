@@ -24,6 +24,9 @@
             @if (mention.Processed == false) {
             <div class="badge bg-info"><span class="fa fa-times-circle" aria-hidden="true"></span> Not processed</div>
             }
+            @if (mention.Classification) {
+            <div class="badge bg-info">{{mention.Classification}}</div>
+            }
             }
         </div>
     </div>
@@ -37,8 +40,16 @@
                 <p class="bottom-gutter"><span class="h5">Justification: </span>{{ mention.Justification }}</p>
             </div>
             <div class="column--xs-12 column--sm-2">
-                <button class="btn btn-success" (click)="processMention()"><span class="fa fa-play-circle"
-                        aria-hidden="true"></span>EMA AI Process</button>
+                <button type="button" class="btn btn-success  btn-block btn-width-medium"
+                        [disabled]="isProcessing"
+                        (click)="processMention()">
+                    @if (!isProcessing) {
+                        <span class="fa fa-play-circle" aria-hidden="true"></span>
+                    } @else {
+                        <span class="fa fa-circle-o-notch fa-spin" aria-hidden="true"></span>
+                    }
+                    {{ isProcessing ? 'Processing…' : 'EMA AI Process' }}
+                </button>
             </div>
         }
         @if (mention.Processed == false) {
@@ -47,8 +58,16 @@
                     Mention pending processing</h3>
             </div>
             <div class="column--xs-12 column--sm-2">
-                <button class="btn btn-success" (click)="processMention()"><span class="fa fa-play-circle"
-                        aria-hidden="true"></span>AI Process</button>
+                <button class="btn btn-success btn-width-medium  btn-block"
+                        [disabled]="isProcessing"
+                        (click)="processMention()">
+                    @if (!isProcessing) {
+                        <span class="fa fa-play-circle" aria-hidden="true"></span>
+                    } @else {
+                        <span class="fa fa-circle-o-notch fa-spin" aria-hidden="true"></span>
+                    }
+                    {{ isProcessing ? 'Processing…' : 'EMA AI Process' }}
+                </button>
             </div>
         }
     </div>
@@ -117,6 +136,11 @@
         </div>
         <div class="column--xs-12 column--xl-2">
             <div style="display: flex; flex-direction: column; align-items:stretch; justify-content: stretch;">
+                 @if (mention['Media type'] == 'X (Twitter)') {
+                    <button type="button" class="btn btn-default" style="margin-bottom: 1rem;" data-toggle="modal" data-target="#replyXDialog">
+                       <span class="fa fa-reply" aria-hidden="true"></span> Reply in X
+                    </button>
+                }
                 @if (!isEditing) {
                 <button class="btn btn-primary" style="margin-bottom: 1rem;" (click)="startEdit()"><span
                         class="fa fa-pencil" aria-hidden="true"></span>Edit</button>
@@ -147,3 +171,26 @@
     <button class="btn btn-secondary" style="margin-bottom: 1rem;" (click)="goBack()">← Back</button>
 </div>
 }
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="replyXDialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reply in X</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label class="control-label" for="exampleTextarea1">Message</label>
+            <textarea rows="5" id="exampleTextarea1" class="form-control" placeholder="Reply text">{{ mention?.Justification }}</textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="btn-link-toolbar">
+          <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-link" data-dismiss="modal">Reply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

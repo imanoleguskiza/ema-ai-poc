@@ -8,9 +8,13 @@
         </button>
       </div>
     </div>
-    <!-- 🏁 FILTROS EN LA VISTA -->
     <div class="column--xs-12 column--xl-12 mb-3">
       <div class="row">
+        <div class="col-md-3">
+          <label>Search title:</label>
+          <input type="text" class="form-control" placeholder="Type to search…" [(ngModel)]="filters.title"
+            (ngModelChange)="onTitleChange($event)" />
+        </div>
         <div class="col-md-3">
           <label>Media Type:</label>
           <select class="form-control" [(ngModel)]="filters.mediaType" (change)="applyFilters()">
@@ -41,9 +45,11 @@
           <thead>
             <tr role="row">
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" (click)="sortBy('id')">ID <span *ngIf="sortColumn === 'id'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('id')">ID <span
+                  *ngIf="sortColumn === 'id'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" (click)="sortBy('Title')">Title <span *ngIf="sortColumn === 'Title'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Title')">Title <span
+                  *ngIf="sortColumn === 'Title'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
                 aria-label="Content: activate to sort column ascending">
                 Detail</th>
@@ -51,16 +57,20 @@
                 aria-label="Content: activate to sort column ascending">
                 External link</th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" (click)="sortBy('Source')">Source <span *ngIf="sortColumn === 'Source'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Source')">Source <span
+                  *ngIf="sortColumn === 'Source'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" (click)="sortBy('Update date')">Update date <span *ngIf="sortColumn === 'Update date'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Update date')">Update date
+                <span *ngIf="sortColumn === 'Update date'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" (click)="sortBy('Publish date')">Publish date <span *ngIf="sortColumn === 'Publish date'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Publish date')">Publish date
+                <span *ngIf="sortColumn === 'Publish date'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
                 aria-label="Content: activate to sort column ascending">
                 Ranking</th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" (click)="sortBy('Media type')">Media type <span *ngIf="sortColumn === 'Media type'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Media type')">Media type <span
+                  *ngIf="sortColumn === 'Media type'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
                 aria-label="Content: activate to sort column ascending">
                 Tags</th>
@@ -104,13 +114,17 @@
                 aria-label="Content: activate to sort column ascending">
                 City</th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-                aria-label="Content: activate to sort column ascending" (click)="sortBy('Sentiment')">Sentiment <span *ngIf="sortColumn === 'Sentiment'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Sentiment')">Sentiment <span
+                  *ngIf="sortColumn === 'Sentiment'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-              aria-label="Content: activate to sort column ascending" (click)="sortBy('Classification')">Classification <span *ngIf="sortColumn === 'Classification'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Classification')">
+                Classification <span *ngIf="sortColumn === 'Classification'">{{ sortDirection === 'asc' ? '▲' : '▼'
+                  }}</span></th>
               <th class="sorting" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-              aria-label="Content: activate to sort column ascending"  (click)="sortBy('Processed')">Processed <span *ngIf="sortColumn === 'Processed'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                aria-label="Content: activate to sort column ascending" (click)="sortBy('Processed')">Processed <span
+                  *ngIf="sortColumn === 'Processed'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
               <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
-              aria-label="Content: activate to sort column ascending">
+                aria-label="Content: activate to sort column ascending">
                 Justification</th>
               <th class="" tabindex="0" aria-controls="example-datatable" rowspan="1" colspan="1"
                 aria-label="Content: activate to sort column ascending">
@@ -118,38 +132,63 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let mention of mentions; trackBy: trackById" [ngClass]="{ 'bg-success-light': mention.Processed == true }">
-              <td>{{ mention.id }}</td>
-              <td class="td-big"><p>{{ mention.Title }}</p></td>
-              <td class="td-big"><p>{{ mention.Detail }}</p></td>
-              <td class="td-medium"><p>{{ mention.Link }}</p></td>
+            <tr *ngIf="isLoading">
+              <td colspan="24">
+                <i class="fa fa-spinner fa-spin"></i> Loading data…
+              </td>
+            </tr>
+            <tr *ngFor="let mention of mentions; trackBy: trackById"
+              [ngClass]="{ 'bg-success-light': mention.Processed == true }">
+              <td><span *ngIf="mention.Processed == true" aria-hidden="true" class="fa fa-check-circle text-success"></span>  {{ mention.id }}</td>
+              <td class="td-big">
+                <p>{{ mention.Title }}</p>
+              </td>
+              <td class="td-big">
+                <p>{{ mention.Detail }}</p>
+              </td>
+              <td class="td-medium">
+                <p>{{ mention.Link }}</p>
+              </td>
               <td>{{ mention.Source }}</td>
               <td>{{ mention['Update date'] }}</td>
               <td>{{ mention['Publish date'] }}</td>
               <td>{{ mention.Ranking }}</td>
               <td>{{ mention['Media type'] }}</td>
-              <td class="td-medium"><p>{{ mention.Tags }}</p></td>
+              <td class="td-medium">
+                <p>{{ mention.Tags }}</p>
+              </td>
               <td>{{ mention.Country }}</td>
               <td>{{ mention.Language }}</td>
               <td>{{ mention.Audience }}</td>
               <td>{{ mention.Reach }}</td>
               <td>{{ mention.Interactions }}</td>
               <td>{{ mention.Notes }}</td>
-              <td class="td-small"><p>{{ mention['Author name'] }}</p></td>
-              <td class="td-small"><p>{{ mention['Author handle (@username)'] }}</p></td>
-              <td class="td-small"><p>{{ mention['Author URL'] }}</p></td>
+              <td class="td-small">
+                <p>{{ mention['Author name'] }}</p>
+              </td>
+              <td class="td-small">
+                <p>{{ mention['Author handle (@username)'] }}</p>
+              </td>
+              <td class="td-small">
+                <p>{{ mention['Author URL'] }}</p>
+              </td>
               <td>{{ mention.Gender }}</td>
               <td>{{ mention.Age }}</td>
-              <td class="td-medium"><p>{{ mention.Bio }}</p></td>
+              <td class="td-medium">
+                <p>{{ mention.Bio }}</p>
+              </td>
               <td>{{ mention.City }}</td>
               <td>{{ mention.Sentiment }}</td>
               <td>{{ mention.Classification }}</td>
               <td>{{ mention.Processed }}</td>
-              <td class="td-big"><p>{{ mention.Justification }}</p></td>
+              <td class="td-big">
+                <p>{{ mention.Justification }}</p>
+              </td>
               <td><button class="btn btn-info btn-sm btn-block"
-                  [routerLink]="['/full-content', mention.id]"><span>Review</span><span class="fa fa-angle-right" aria-hidden="true"></span></button></td>
+                  [routerLink]="['/full-content', mention.id]"><span>Review</span><span class="fa fa-angle-right"
+                    aria-hidden="true"></span></button></td>
             </tr>
-            <tr *ngIf="mentions.length === 0">
+            <tr *ngIf="!isLoading && mentions.length === 0">
               <td colspan="24">There are no items.</td>
             </tr>
           </tbody>
@@ -158,17 +197,18 @@
 
       <nav aria-label="Page navigation">
         <ul class="pagination pull-right">
-          <li class="pagination-extra">{{ startItem }}‑{{ endItem }} of {{ totalRows }}</li>
-          <li [class.disabled]="currentPage === 1">
+          <li class="pagination-extra">{{ startItem }}-{{ endItem }} of {{ totalRows }}</li>
+          <li [class.disabled]="currentPage === 1 || isLoading">
             <a (click)="previousPage()">
               <span aria-label="Previous" class="fa fa-angle-left"></span>
             </a>
           </li>
-          <li class="hidden-xs" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage">
+          <li class="hidden-xs" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage"
+            [class.disabled]="isLoading">
             <a (click)="goToPage(page)">{{ page }}</a>
           </li>
-          <li [class.disabled]="currentPage === totalPages">
-            <a href="#" (click)="nextPage()">
+          <li [class.disabled]="currentPage === totalPages || isLoading">
+            <a (click)="nextPage()">
               <span aria-label="Next" class="fa fa-angle-right"></span>
             </a>
           </li>
@@ -189,101 +229,102 @@
               <div class="modal-body">
                 <div class="">
                   <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter">
-                    <!-- 🟦 Contenido -->
+                    
                     <fieldset class="column--xs-12 column--xl-12">
                       <legend>Content</legend>
-    
+
                       <div class="form-group">
                         <label for="Title">Title</label>
                         <input type="text" class="form-control" id="Title" name="Title" [(ngModel)]="newMention.Title"
                           required />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Detail">Detail</label>
                         <textarea class="form-control" id="Detail" name="Detail" rows="3"
                           [(ngModel)]="newMention.Detail"></textarea>
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Source">Source</label>
-                        <input type="text" class="form-control" id="Source" name="Source" [(ngModel)]="newMention.Source" />
+                        <input type="text" class="form-control" id="Source" name="Source"
+                          [(ngModel)]="newMention.Source" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Link">Link</label>
                         <input type="url" class="form-control" id="Link" name="Link" [(ngModel)]="newMention.Link" />
                       </div>
                     </fieldset>
 
-                    <!-- 🟩 Metadatos -->
                     <fieldset class="column--xs-12 column--xl-6">
                       <legend>Metadata</legend>
-    
+
                       <div class="form-group">
                         <label for="UpdateDate">Update Date</label>
                         <input type="text" class="form-control" id="UpdateDate" name="UpdateDate"
                           [(ngModel)]="newMention['Update date']" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="PublishDate">Publish Date</label>
                         <input type="text" class="form-control" id="PublishDate" name="PublishDate"
                           [(ngModel)]="newMention['Publish date']" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Sentiment">Sentiment</label>
                         <input type="text" class="form-control" id="Sentiment" name="Sentiment"
                           [(ngModel)]="newMention.Sentiment" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Ranking">Ranking</label>
                         <input type="number" class="form-control" id="Ranking" name="Ranking"
                           [(ngModel)]="newMention.Ranking" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="MediaType">Media Type</label>
                         <input type="text" class="form-control" id="MediaType" name="MediaType"
                           [(ngModel)]="newMention['Media type']" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Tags">Tags</label>
                         <input type="text" class="form-control" id="Tags" name="Tags" [(ngModel)]="newMention.Tags" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Country">Country</label>
                         <input type="text" class="form-control" id="Country" name="Country"
                           [(ngModel)]="newMention.Country" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Language">Language</label>
                         <input type="text" class="form-control" id="Language" name="Language"
                           [(ngModel)]="newMention.Language" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Audience">Audience</label>
                         <input type="text" class="form-control" id="Audience" name="Audience"
                           [(ngModel)]="newMention.Audience" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Reach">Reach</label>
-                        <input type="number" class="form-control" id="Reach" name="Reach" [(ngModel)]="newMention.Reach" />
+                        <input type="number" class="form-control" id="Reach" name="Reach"
+                          [(ngModel)]="newMention.Reach" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Interactions">Interactions</label>
                         <input type="text" class="form-control" id="Interactions" name="Interactions"
                           [(ngModel)]="newMention.Interactions" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Notes">Notes</label>
                         <textarea class="form-control" id="Notes" name="Notes" rows="2"
@@ -291,56 +332,55 @@
                       </div>
                     </fieldset>
 
-                     <!-- 🟨 Autor -->
                     <fieldset class="column--xs-12 column--xl-6">
                       <legend>Author</legend>
-    
+
                       <div class="form-group">
                         <label for="AuthorName">Author Name</label>
                         <input type="text" class="form-control" id="AuthorName" name="AuthorName"
                           [(ngModel)]="newMention['Author name']" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="AuthorHandle">Author Handle (&#64;username)</label>
                         <input type="text" class="form-control" id="AuthorHandle" name="AuthorHandle"
                           [(ngModel)]="newMention['Author handle (@username)']" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="AuthorURL">Author URL</label>
                         <input type="url" class="form-control" id="AuthorURL" name="AuthorURL"
                           [(ngModel)]="newMention['Author URL']" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Gender">Gender</label>
-                        <input type="text" class="form-control" id="Gender" name="Gender" [(ngModel)]="newMention.Gender" />
+                        <input type="text" class="form-control" id="Gender" name="Gender"
+                          [(ngModel)]="newMention.Gender" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Age">Age</label>
                         <input type="text" class="form-control" id="Age" name="Age" [(ngModel)]="newMention.Age" />
                       </div>
-    
+
                       <div class="form-group">
                         <label for="Bio">Bio</label>
-                        <textarea class="form-control" id="Bio" name="Bio" rows="2" [(ngModel)]="newMention.Bio"></textarea>
+                        <textarea class="form-control" id="Bio" name="Bio" rows="2"
+                          [(ngModel)]="newMention.Bio"></textarea>
                       </div>
-    
+
                       <div class="form-group">
                         <label for="City">City</label>
                         <input type="text" class="form-control" id="City" name="City" [(ngModel)]="newMention.City" />
                       </div>
-    
+
                     </fieldset>
-    
+
                   </div>
                 </div>
 
-
               </div>
-
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
