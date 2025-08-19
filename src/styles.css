@@ -55,3 +55,7 @@ th.sorting:hover {
 .alert:before {
     line-height: 42px;
 }
+
+.flex-wrap {
+    flex-wrap: wrap;
+}

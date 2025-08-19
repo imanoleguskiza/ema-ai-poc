@@ -15,13 +15,14 @@ export class FullContentComponent implements OnInit {
   editableMention: Mention | null = null;
   isLoading = true;
   isEditing = false;
-
-  // 🔹 Nuevo estado para el loading del botón de procesamiento
   isProcessing = false;
 
   alert: string = 'info';
   message: string = '';
   procesadoResultado: any = null;
+
+  replyText: string = '';
+  tweetId: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,12 +34,40 @@ export class FullContentComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.mention = await this.supabaseService.getMentionById(Number(id));
+      if (this.mention?.Link) {
+        const match = this.mention.Link.match(/status\/(\d+)/);
+        this.tweetId = match ? match[1] : null;
+      }
+
+      this.replyText = this.mention?.Justification || '';
     }
     this.isLoading = false;
   }
 
+  getReplyHref(): string | null {
+    if (!this.tweetId) return null;
+    return `https://x.com/intent/tweet?in_reply_to=${this.tweetId}&text=${encodeURIComponent(this.replyText || '')}`;
+  }
+
+  openReply(event: Event) {
+    event.preventDefault();
+    const url = this.getReplyHref();
+    if (!url) return;
+    window.open(url, '_blank', 'noopener');
+    const modalEl = document.getElementById('replyXDialog');
+    const bs = (window as any).bootstrap;
+    if (modalEl && bs?.Modal?.getOrCreateInstance) {
+      bs.Modal.getOrCreateInstance(modalEl).hide();
+      return;
+    }
+    const $ = (window as any)['$'];
+    if (modalEl && $?.fn?.modal) {
+      $(modalEl).modal('hide');
+    }
+  }
+
   goBack() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/dashboard']);
   }
 
   startEdit() {
@@ -89,10 +118,7 @@ export class FullContentComponent implements OnInit {
   async processMention() {
     if (!this.mention || this.isProcessing) return;
 
-    // 🔹 Empieza la animación de loading del botón
     this.isProcessing = true;
-    this.alert = 'info';
-    this.message = 'Processing…';
 
     try {
       const response = await fetch('https://prototypepocvertexdisinformation-vertex.app.dev.techhubnttdata.com/verify', {
@@ -107,10 +133,6 @@ export class FullContentComponent implements OnInit {
       if (!response.ok) throw new Error('Error in the request');
 
       const result = await response.json();
-
-      console.log(result);
-      console.log(result.classification);
-      console.log(result.justification);
 
       const updatedMention = {
         ...this.mention,
@@ -134,7 +156,6 @@ export class FullContentComponent implements OnInit {
       this.alert = 'danger';
       this.message = 'Error processing mention.';
     } finally {
-      // 🔹 Termina la animación de loading del botón
       this.isProcessing = false;
     }
   }
