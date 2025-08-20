@@ -60,21 +60,20 @@ export class DashboardComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    // 🆕 suscripción con debounce para la búsqueda por título
+
     this.titleInput$
       .pipe(
         debounceTime(300),
         distinctUntilChanged()
       )
       .subscribe(() => {
-        // al cambiar el título, re-aplicamos filtros desde la página 1
+
         this.applyFilters();
       });
 
     await this.applyFilters();
   }
 
-  // 🆕 handler del input de título
   onTitleChange(value: string) {
     this.filters.title = value || '';
     this.titleInput$.next(this.filters.title);
@@ -114,7 +113,7 @@ export class DashboardComponent implements OnInit {
       this.mentions = [];
     } else {
       this.mentions = data || [];
-      this.extractUniqueValues(); // útil para rellenar select de filtros
+      this.extractUniqueValues();
     }
 
     this.isLoading = false;
@@ -182,7 +181,7 @@ export class DashboardComponent implements OnInit {
 
   openModal() {
     $(document).basecoat();
-    this.newMention = {}; // limpia el formulario
+    this.newMention = {};
     $('#mentionModal').modal('show');
   }
 

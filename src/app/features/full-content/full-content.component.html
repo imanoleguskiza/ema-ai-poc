@@ -109,26 +109,62 @@
                     </div>
                     <div class="accordion-content collapse">
                         <div class="top-gutter bottom-gutter">
-                            <p><strong>Update Date:</strong> {{ mention['Update date'] }}</p>
-                            <p><strong>Publish Date:</strong> {{ mention['Publish date'] }}</p>
-                            <p><strong>Sentiment:</strong> {{ mention.Sentiment }} </p>                     
-                            <p><strong>Ranking:</strong> {{ mention.Ranking }}</p>
-                            <p><strong>Media Type:</strong> {{ mention['Media type'] }}</p>
-                            <p><strong>Country:</strong> {{ mention.Country }}</p>
-                            <p><strong>Language:</strong> {{ mention.Language }}</p>
-                            <p><strong>Audience:</strong> {{ mention.Audience }}</p>
-                            <p><strong>Reach:</strong> {{ mention.Reach }}</p>
-                            <p><strong>Interactions:</strong> {{ mention.Interactions }}</p>
-                            <p><strong>Notes:</strong> {{ mention.Notes }}</p>
-                            <p><strong>Author:</strong> {{ mention['Author name'] }}</p>
-                            <p><strong>Author Handle:</strong> {{ mention['Author handle (@username)'] }}</p>
-                            <p><strong>Author URL: </strong>
-                                <a [href]="mention['Author URL']" target="_blank">{{ mention['Author URL'] }}</a>
-                            </p>
-                            <p><strong>Gender:</strong> {{ mention.Gender }}</p>
-                            <p><strong>Age:</strong> {{ mention.Age }}</p>
-                            <p><strong>Biography:</strong> {{ mention.Bio }}</p>
-                            <p><strong>City:</strong> {{ mention.City }}</p>
+                            @if (mention['Update date']) {
+                                <p><strong>Update Date:</strong> {{ mention['Update date'] }}</p>
+                            }
+                            @if (mention['Publish date']) {
+                                <p><strong>Publish Date:</strong> {{ mention['Publish date'] }}</p>
+                            }
+                            @if (mention.Sentiment) {
+                                <p><strong>Sentiment:</strong> {{ mention.Sentiment }} </p>
+                            }
+                            @if (mention.Ranking) {
+                                <p><strong>Ranking:</strong> {{ mention.Ranking }}</p>
+                            }
+                            @if (mention['Media type']) {
+                                <p><strong>Media Type:</strong> {{ mention['Media type'] }}</p>
+                            } 
+                            @if (mention.Country) {
+                                <p><strong>Country:</strong> {{ mention.Country }}</p>
+                            } 
+                            @if (mention.Language) {
+                                <p><strong>Language:</strong> {{ mention.Language }}</p>
+                            } 
+                            @if (mention.Audience) {
+                                <p><strong>Audience:</strong> {{ mention.Audience }}</p>
+                            } 
+                            @if (mention.Reach) {
+                                <p><strong>Reach:</strong> {{ mention.Reach }}</p>
+                            } 
+                            @if (mention.Interactions) {
+                                <p><strong>Interactions:</strong> {{ mention.Interactions }}</p>
+                            } 
+                            @if (mention.Notes) {
+                                <p><strong>Notes:</strong> {{ mention.Notes }}</p>
+                            } 
+                            @if (mention['Author name']) {
+                                <p><strong>Author:</strong> {{ mention['Author name'] }}</p>
+                            } 
+                            @if (mention['Author handle (@username)']) {
+                                <p><strong>Author Handle:</strong> {{ mention['Author handle (@username)'] }}</p>
+                            } 
+                            @if (mention['Author URL']) {
+                                <p><strong>Author URL: </strong>
+                                    <a [href]="mention['Author URL']" target="_blank">{{ mention['Author URL'] }}</a>
+                                </p>
+                            } 
+                            @if (mention.Gender) {
+                                <p><strong>Gender:</strong> {{ mention.Gender }}</p>
+                            } 
+                            @if (mention.Age) {
+                                <p><strong>Age:</strong> {{ mention.Age }}</p>
+                            } 
+                            @if (mention.Bio) {
+                                <p><strong>Biography:</strong> {{ mention.Bio }}</p>
+                            } 
+                            @if (mention.City) {
+                                <p><strong>City:</strong> {{ mention.City }}</p>
+                            }                     
                         </div>
                     </div>
                 </div>
