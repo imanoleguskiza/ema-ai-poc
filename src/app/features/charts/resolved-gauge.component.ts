@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import type * as Highcharts from 'highcharts';
-import { createClient } from '@supabase/supabase-js';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { environment } from '../../environments/environment';
 
@@ -58,16 +57,13 @@ export class ResolvedGaugeComponent implements OnInit, AfterViewInit, OnDestroy 
   async ngOnInit() {
     const { total, resolved } = await this.countResolvedWithFallback();
     const notResolved = Math.max(total - resolved, 0);
-
     this.seriesData = [
       { name: 'Resolved', y: resolved, color: this.colors[0] },
       { name: 'Not resolved', y: notResolved, color: this.colors[1] }
     ];
-
     this.subtitleText = total > 0
       ? `${resolved} resolved • ${notResolved} not resolved`
       : 'No data';
-
     this.renderIfReady();
   }
 
@@ -93,6 +89,8 @@ export class ResolvedGaugeComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private async countResolvedWithFallback(): Promise<{ total: number; resolved: number }> {
     try {
+      const supaMod = await import('@supabase/supabase-js');
+      const createClient = (supaMod as any).createClient as typeof import('@supabase/supabase-js').createClient;
       const supa = createClient(environment.supabaseUrl, environment.supabaseKey, {
         auth: { persistSession: false, autoRefreshToken: false }
       });
@@ -100,7 +98,6 @@ export class ResolvedGaugeComponent implements OnInit, AfterViewInit, OnDestroy 
       const totalRes = await supa.from(table).select('id', { count: 'exact', head: true });
       const total = totalRes.count ?? 0;
       const resolvedRes = await supa.from(table).select('id', { count: 'exact', head: true }).eq('Resolved', true);
-
       if (!resolvedRes.error) {
         return { total, resolved: resolvedRes.count ?? 0 };
       }
