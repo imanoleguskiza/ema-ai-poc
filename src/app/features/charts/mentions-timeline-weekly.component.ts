@@ -1,7 +1,7 @@
 import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HighchartsChartComponent, providePartialHighcharts } from 'highcharts-angular';
-import * as Highcharts from 'highcharts';
+import type * as Highcharts from 'highcharts';
 import { SupabaseService } from '../../core/services/supabase.service';
 
 @Component({
@@ -29,7 +29,7 @@ export class MentionsTimelineWeeklyComponent implements OnInit {
   private chart?: Highcharts.Chart;
 
   private line = '#80b9de';
-  private area = Highcharts.color('#80b9de').setOpacity(0.25).get('rgba') as string;
+  private area = 'rgba(128,185,222,0.25)';
 
   options: Highcharts.Options = {
     chart: { type: 'area', spacing: [12,0,12,0], styledMode: true },
@@ -42,7 +42,7 @@ export class MentionsTimelineWeeklyComponent implements OnInit {
     tooltip: {
       shared: true,
       formatter: function (this: Highcharts.Point & { points?: Highcharts.Point[] }) {
-        const x = Number(this.x);                       // epoch ms
+        const x = Number(this.x);
         const start = new Date(x);
         const end = new Date(x + 6 * 24 * 3600 * 1000);
         const fmt = (d: Date) =>
@@ -126,7 +126,6 @@ export class MentionsTimelineWeeklyComponent implements OnInit {
       if (points.length === 0) (this.chart as any)?.showNoData?.('No data to show');
       else (this.chart as any)?.hideNoData?.();
     } catch (e) {
-      console.error('Timeline weekly load error:', e);
       (this.chart as any)?.showNoData?.('Error loading data');
     } finally {
       this.chart?.hideLoading();

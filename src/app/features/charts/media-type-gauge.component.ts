@@ -9,7 +9,7 @@ import {
   PLATFORM_ID
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import * as Highcharts from 'highcharts';
+import type * as Highcharts from 'highcharts';
 import { SupabaseService } from '../../core/services/supabase.service';
 
 @Component({
@@ -35,6 +35,8 @@ export class MediaTypeGaugeComponent implements OnInit, AfterViewInit, OnDestroy
   private seriesData: Highcharts.PointOptionsObject[] = [];
   private subtitleText = 'No data';
 
+  private HC: typeof import('highcharts') | null = null;
+
   constructor(
     private supabase: SupabaseService,
     @Inject(PLATFORM_ID) platformId: Object
@@ -42,20 +44,24 @@ export class MediaTypeGaugeComponent implements OnInit, AfterViewInit, OnDestroy
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
+  private async getHC() {
+    if (!this.HC) {
+      const mod = await import('highcharts');
+      this.HC = (mod as any).default ?? (mod as any);
+    }
+    return this.HC!;
+  }
+
   async ngOnInit() {
     const rows = await this.supabase.getCountsByMediaType();
     const total = rows.reduce((s, r) => s + (r.y || 0), 0);
     this.seriesData = rows.map(r => ({ name: r.name || 'N/A', y: r.y || 0 }));
-
-    const top = rows.reduce((a, b) => (a.y >= b.y ? a : b), { name: 'N/A', y: 0 });
     this.subtitleText = total > 0 ? 'Mentions sources' : 'No data';
-
     this.renderIfReady();
   }
 
   ngAfterViewInit() {
     this.renderIfReady();
-
     if (this.isBrowser && this.chartEl?.nativeElement) {
       this.ro = new ResizeObserver(() => {
         if (this.chart) this.chart.reflow();
@@ -76,8 +82,10 @@ export class MediaTypeGaugeComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  private renderIfReady() {
+  private async renderIfReady() {
     if (!this.isBrowser || !this.chartEl) return;
+
+    const Highcharts = await this.getHC();
 
     const options: Highcharts.Options = {
       chart: {

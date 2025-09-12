@@ -9,7 +9,7 @@ import {
   PLATFORM_ID
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import * as Highcharts from 'highcharts';
+import type * as Highcharts from 'highcharts';
 import { SupabaseService } from '../../core/services/supabase.service';
 
 @Component({
@@ -36,11 +36,21 @@ export class ProcessedGaugeComponent implements OnInit, AfterViewInit, OnDestroy
   private subtitleText = 'No data';
   private colors = ['#0072bc', '#abb3b8'];
 
+  private HC: typeof import('highcharts') | null = null;
+
   constructor(
     private supabase: SupabaseService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+  }
+
+  private async getHC() {
+    if (!this.HC) {
+      const mod = await import('highcharts');
+      this.HC = (mod as any).default ?? (mod as any);
+    }
+    return this.HC!;
   }
 
   async ngOnInit() {
@@ -91,8 +101,10 @@ export class ProcessedGaugeComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  private renderIfReady() {
+  private async renderIfReady() {
     if (!this.isBrowser || !this.chartEl) return;
+
+    const Highcharts = await this.getHC();
 
     const options: Highcharts.Options = {
       chart: {

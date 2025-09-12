@@ -9,7 +9,7 @@ import {
   PLATFORM_ID
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import * as Highcharts from 'highcharts';
+import type * as Highcharts from 'highcharts';
 import { SupabaseService } from '../../core/services/supabase.service';
 
 @Component({
@@ -35,6 +35,8 @@ export class ClassificationGaugeComponent implements OnInit, AfterViewInit, OnDe
   private seriesData: Highcharts.PointOptionsObject[] = [];
   private subtitleText = 'No data';
 
+  private HC: typeof import('highcharts') | null = null;
+
   constructor(
     private supabase: SupabaseService,
     @Inject(PLATFORM_ID) platformId: Object
@@ -42,11 +44,17 @@ export class ClassificationGaugeComponent implements OnInit, AfterViewInit, OnDe
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
+  private async getHC() {
+    if (!this.HC) {
+      const mod = await import('highcharts');
+      this.HC = (mod as any).default ?? (mod as any);
+    }
+    return this.HC!;
+  }
+
   async ngOnInit() {
-    
     const rows = await this.supabase.getCountsByClassification();
     this.seriesData = rows.map(r => ({ name: r.name || 'N/A', y: r.y || 0 }));
-
     try {
       const { total, processed } = await this.supabase.getProcessedAndTotal();
       const pending = Math.max((total || 0) - (processed || 0), 0);
@@ -56,7 +64,6 @@ export class ClassificationGaugeComponent implements OnInit, AfterViewInit, OnDe
     } catch {
       this.subtitleText = 'No data';
     }
-
     this.renderIfReady();
   }
 
@@ -80,8 +87,10 @@ export class ClassificationGaugeComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
-  private renderIfReady() {
+  private async renderIfReady() {
     if (!this.isBrowser || !this.chartEl) return;
+
+    const Highcharts = await this.getHC();
 
     const options: Highcharts.Options = {
       chart: {

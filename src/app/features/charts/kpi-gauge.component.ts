@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges, PLATFORM_ID, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HighchartsChartComponent, providePartialHighcharts } from 'highcharts-angular';
-import * as Highcharts from 'highcharts';
+import type * as Highcharts from 'highcharts';
 
 type DonutPoint = { name: string; y: number };
 
@@ -45,7 +45,7 @@ export class KpiGaugeComponent implements OnChanges {
 
   onChartInstance(chart: Highcharts.Chart) {
     this.chart = chart;
-    chart.update({ lang: { loading: 'Cargando…' } }, false);
+    chart.update({ lang: { loading: 'Loading…' } }, false);
     if (!this.hasData()) chart.showLoading(); else chart.hideLoading();
   }
 
@@ -81,7 +81,6 @@ export class KpiGaugeComponent implements OnChanges {
     const endAngle = 360;
     const primary = this.color ?? '#80b9de';
     const rest = this.trackColor ?? '#586671';
-    const self = this;
 
     return {
       chart: {
