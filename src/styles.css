@@ -59,3 +59,19 @@ th.sorting:hover {
 .flex-wrap {
     flex-wrap: wrap;
 }
+
+.h-100 {
+    height: 100% !important;
+}
+
+.highcharts-panel {
+    min-height: 360px;
+}
+
+.highcharts-grid-line { stroke: transparent !important; }
+.highcharts-minor-grid-line { stroke: transparent !important; }
+.highcharts-axis-line { stroke: transparent !important; }
+.highcharts-tick { stroke: transparent !important; }
+.highcharts-minor-tick { stroke: transparent !important; }
+.highcharts-data-label text, text.highcharts-data-label { fill: #1e2022; }
+.highcharts-data-label { font-size: 12px; }

@@ -7,11 +7,19 @@ import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { SupabaseService, Mention } from '../../core/services/supabase.service';
 
+// Charts
+import { MediaTypeGaugeComponent } from '../charts/media-type-gauge.component';
+import { ClassificationGaugeComponent } from '../charts/classification-gauge.component';
+import { ProcessedGaugeComponent } from '../charts/processed-gauge.component';
+import { MentionsCounterBannerComponent } from '../charts/mentions-counter-banner.component';
+import { MentionsTimelineWeeklyComponent } from '../charts/mentions-timeline-weekly.component';
+import { ResolvedGaugeComponent } from '../charts/resolved-gauge.component';
+
 declare var $: any;
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, MediaTypeGaugeComponent, ClassificationGaugeComponent, ProcessedGaugeComponent, MentionsCounterBannerComponent, MentionsTimelineWeeklyComponent, ResolvedGaugeComponent],
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html'
 })
