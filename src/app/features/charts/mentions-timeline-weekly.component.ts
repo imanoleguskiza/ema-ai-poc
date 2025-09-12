@@ -65,7 +65,7 @@ export class MentionsTimelineWeeklyComponent implements OnInit {
 
   onChartInstance(chart: Highcharts.Chart) {
     this.chart = chart;
-    chart.update({ lang: { loading: 'Cargando…' } }, false);
+    chart.update({ lang: { loading: 'Loading…' } }, false);
     chart.showLoading();
   }
 
@@ -123,11 +123,11 @@ export class MentionsTimelineWeeklyComponent implements OnInit {
         time: { timezone: 'UTC' }
       };
 
-      if (points.length === 0) (this.chart as any)?.showNoData?.('Sin datos para mostrar');
+      if (points.length === 0) (this.chart as any)?.showNoData?.('No data to show');
       else (this.chart as any)?.hideNoData?.();
     } catch (e) {
       console.error('Timeline weekly load error:', e);
-      (this.chart as any)?.showNoData?.('Error cargando datos');
+      (this.chart as any)?.showNoData?.('Error loading data');
     } finally {
       this.chart?.hideLoading();
     }
