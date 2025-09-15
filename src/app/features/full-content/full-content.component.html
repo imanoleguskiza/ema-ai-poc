@@ -79,7 +79,7 @@
         </div>
     </div>
     <div class="grid grid-container--lg gutter--md-xl gutter-row--md top-gutter bottom-gutter">
-        <div class="column--xs-12 column--xl-10">
+        <div class="column--xs-12 column--xl-9">
             <p><strong>Source:</strong>
                 @if (isEditing) {
                 <input class="form-control" [(ngModel)]="editableMention!.Source" />
@@ -170,13 +170,19 @@
                 </div>
             </div>
         </div>
-        <div class="column--xs-12 column--xl-2">
+        <div class="column--xs-12 column--xl-3">
             <div style="display: flex; flex-direction: column; align-items:stretch; justify-content: stretch;">
                  @if (mention['Media type'] == 'X (Twitter)') {
                     <button type="button" class="btn btn-default btn-block btn-width-medium" style="margin-bottom: 1rem;" data-toggle="modal" data-target="#replyXDialog">
                        <span class="fa fa-reply" aria-hidden="true"></span> Reply in X
                     </button>
                 }
+                <button class="btn btn-default btn-block btn-width-medium" style="margin-bottom: 1rem;"
+                        (click)="toggleResolved()"
+                        [disabled]="isResolving">
+                    <span class="fa" [ngClass]="mention.Resolved ? 'fa-undo' : 'fa-check-circle'" aria-hidden="true"></span>
+                    {{ mention.Resolved ? 'Mark as unresolved' : 'Mark as resolved' }}
+                </button>
                 @if (!isEditing) {
                 <button class="btn btn-primary btn-block btn-width-medium" style="margin-bottom: 1rem;" (click)="startEdit()"><span
                         class="fa fa-pencil" aria-hidden="true"></span>Edit</button>

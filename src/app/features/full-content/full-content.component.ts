@@ -16,6 +16,7 @@ export class FullContentComponent implements OnInit {
   isLoading = true;
   isEditing = false;
   isProcessing = false;
+  isResolving = false;
 
   alert: string = 'info';
   message: string = '';
@@ -74,6 +75,22 @@ export class FullContentComponent implements OnInit {
         this.message = 'Reply sent, but it could not be marked as resolved.';
       }
     }
+  }
+
+  async toggleResolved() {
+    if (!this.mention || this.isResolving) return;
+    this.isResolving = true;
+    const next = !Boolean(this.mention.Resolved);
+    const ok = await this.supabaseService.setResolved(this.mention.id, next);
+    if (ok) {
+      this.mention = { ...this.mention, Resolved: next };
+      this.alert = 'success';
+      this.message = next ? 'Marked as resolved.' : 'Marked as unresolved.';
+    } else {
+      this.alert = 'danger';
+      this.message = 'Error updating resolved state.';
+    }
+    this.isResolving = false;
   }
 
   goBack() {
