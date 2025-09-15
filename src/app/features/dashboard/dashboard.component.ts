@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
-import { SupabaseService, Mention } from '../../core/services/supabase.service';
+import { SupabaseService, Mention, Topic } from '../../core/services/supabase.service';
 import { MediaTypeGaugeComponent } from '../charts/media-type-gauge.component';
 import { ClassificationGaugeComponent } from '../charts/classification-gauge.component';
 import { ProcessedGaugeComponent } from '../charts/processed-gauge.component';
@@ -16,6 +16,38 @@ import { ResolvedGaugeComponent } from '../charts/resolved-gauge.component';
 declare var $: any;
 
 type SortDir = 'asc' | 'desc';
+
+type DashboardConfig = {
+  topic: Topic;
+  charts: {
+    overview: boolean;
+    processed: boolean;
+    mediaType: boolean;
+    resolved: boolean;
+    classification: boolean;
+  };
+  tables: {
+    processed: boolean;
+    unprocessed: boolean;
+  };
+  showNewMentionButton: boolean;
+};
+
+const DEFAULT_CONFIG: DashboardConfig = {
+  topic: 'Ibuprofen',
+  charts: {
+    overview: true,
+    processed: true,
+    mediaType: true,
+    resolved: true,
+    classification: true
+  },
+  tables: {
+    processed: true,
+    unprocessed: true
+  },
+  showNewMentionButton: true
+};
 
 @Component({
   standalone: true,
@@ -37,43 +69,37 @@ export class DashboardComponent implements OnInit {
   processed: Mention[] = [];
   unprocessed: Mention[] = [];
   newMention: Partial<Mention> = {};
-
   pageSize = 1000;
-
   pPage = 1;
   pTotalPages = 1;
   pTotalRows = 0;
   pPages: number[] = [];
   isLoadingProcessed = false;
   pSort = { column: 'id', dir: 'asc' as SortDir };
-
   uPage = 1;
   uTotalPages = 1;
   uTotalRows = 0;
   uPages: number[] = [];
   isLoadingUnprocessed = false;
   uSort = { column: 'id', dir: 'asc' as SortDir };
-
   pf = { mediaType: '', classification: '', resolved: '' as '' | boolean, tagTerm: '', titleTerm: '' };
   uf = { mediaType: '', tagTerm: '', titleTerm: '' };
-
   mediaTypesProcessed: string[] = [];
   classificationsProcessed: string[] = [];
   mediaTypesUnprocessed: string[] = [];
-
   selectedProcessed: Record<number, boolean> = {};
   selectedUnprocessed: Record<number, boolean> = {};
   allProcessedSelected = false;
   allUnprocessedSelected = false;
-
   processingProcessed = false;
   processingUnprocessed = false;
   deletingProcessed = false;
   deletingUnprocessed = false;
-
   deleteModalOpen = false;
   deleteModalContext: 'processed' | 'unprocessed' | null = null;
-
+  config: DashboardConfig = DEFAULT_CONFIG;
+  workingConfig: DashboardConfig = { ...DEFAULT_CONFIG };
+  configModalOpen = false;
   private pDebounce$ = new Subject<string>();
   private uDebounce$ = new Subject<string>();
 
@@ -97,7 +123,6 @@ export class DashboardComponent implements OnInit {
     const end = this.uPage * this.pageSize;
     return end > this.uTotalRows ? this.uTotalRows : end;
   }
-
   get selectedProcessedCount(): number {
     return Object.values(this.selectedProcessed).filter(Boolean).length;
   }
@@ -105,10 +130,12 @@ export class DashboardComponent implements OnInit {
     return Object.values(this.selectedUnprocessed).filter(Boolean).length;
   }
 
-  ngOnInit(): Promise<void> {
+  async ngOnInit(): Promise<void> {
+    this.loadConfig();
+    this.applyTopicToService(this.config.topic);
     this.pDebounce$.pipe(debounceTime(250), distinctUntilChanged()).subscribe(() => this.pReloadAll());
     this.uDebounce$.pipe(debounceTime(250), distinctUntilChanged()).subscribe(() => this.uReloadAll());
-    return Promise.all([this.pReloadAll(), this.uReloadAll()]).then(() => undefined);
+    await Promise.all([this.pReloadAll(), this.uReloadAll()]);
   }
 
   private pSignature(): string {
@@ -166,7 +193,7 @@ export class DashboardComponent implements OnInit {
     const from = (page - 1) * this.pageSize;
     const to = from + this.pageSize - 1;
     this.pPage = page;
-    this.isLoadingProcessed = true;
+       this.isLoadingProcessed = true;
     const { data } = await this.supabaseService.getMentionsFilteredV2(
       from,
       to,
@@ -220,7 +247,6 @@ export class DashboardComponent implements OnInit {
   pPrev() { if (!this.isLoadingProcessed && this.pPage > 1) this.pLoadPage(this.pPage - 1); }
   pNext() { if (!this.isLoadingProcessed && this.pPage < this.pTotalPages) this.pLoadPage(this.pPage + 1); }
   pGo(p: number) { if (!this.isLoadingProcessed) this.pLoadPage(p); }
-
   uPrev() { if (!this.isLoadingUnprocessed && this.uPage > 1) this.uLoadPage(this.uPage - 1); }
   uNext() { if (!this.isLoadingUnprocessed && this.uPage < this.uTotalPages) this.uLoadPage(this.uPage + 1); }
   uGo(p: number) { if (!this.isLoadingUnprocessed) this.uLoadPage(p); }
@@ -244,7 +270,7 @@ export class DashboardComponent implements OnInit {
   notEmptyString = (v: unknown): v is string => typeof v === 'string' && v.trim().length > 0;
 
   openModal() {
-    $(document).basecoat();
+    $(document).basecoat?.();
     this.newMention = {};
     $('#mentionModal').modal('show');
   }
@@ -333,13 +359,13 @@ export class DashboardComponent implements OnInit {
   toggleSelectAllProcessed(e: Event) {
     const checked = (e.target as HTMLInputElement).checked;
     this.allProcessedSelected = checked;
-    this.processed.forEach(m => this.selectedProcessed[m.id] = checked);
+    this.processed.forEach(m => (this.selectedProcessed[m.id] = checked));
     this.applyProcessedFilters();
   }
   toggleSelectAllUnprocessed(e: Event) {
     const checked = (e.target as HTMLInputElement).checked;
     this.allUnprocessedSelected = checked;
-    this.unprocessed.forEach(m => this.selectedUnprocessed[m.id] = checked);
+    this.unprocessed.forEach(m => (this.selectedUnprocessed[m.id] = checked));
     this.applyUnprocessedFilters();
   }
   syncAllProcessedSelected() {
@@ -356,6 +382,53 @@ export class DashboardComponent implements OnInit {
     this.selectedUnprocessed = {};
     this.allUnprocessedSelected = false;
   }
-
   uReloadPage() { this.uLoadPage(this.uPage); }
+
+  openConfigModal() {
+    this.workingConfig = JSON.parse(JSON.stringify(this.config));
+    this.configModalOpen = true;
+  }
+  closeConfigModal() {
+    this.configModalOpen = false;
+  }
+  async saveConfig() {
+    const prevDb = this.supabaseService.dbname;
+    this.config = JSON.parse(JSON.stringify(this.workingConfig));
+    try {
+      localStorage.setItem('dashboardConfig', JSON.stringify(this.config));
+    } catch {}
+    this.applyTopicToService(this.config.topic);
+    this.configModalOpen = false;
+    const topicChanged = prevDb !== this.supabaseService.dbname;
+    if (topicChanged) {
+      await Promise.all([this.pReloadAll(), this.uReloadAll()]);
+    }
+  }
+  loadConfig() {
+    try {
+      const raw = localStorage.getItem('dashboardConfig');
+      if (raw) {
+        const parsed = JSON.parse(raw) as DashboardConfig;
+        this.config = {
+          ...DEFAULT_CONFIG,
+          ...parsed,
+          charts: { ...DEFAULT_CONFIG.charts, ...(parsed.charts || {}) },
+          tables: { ...DEFAULT_CONFIG.tables, ...(parsed.tables || {}) }
+        };
+      } else {
+        this.config = { ...DEFAULT_CONFIG };
+      }
+    } catch {
+      this.config = { ...DEFAULT_CONFIG };
+    }
+  }
+  private applyTopicToService(topic: Topic) {
+    this.supabaseService.setTopic(topic);
+  }
+
+  toggleChart(key: 'overview' | 'processed' | 'mediaType' | 'resolved' | 'classification') {
+    const next = { ...this.workingConfig.charts };
+    next[key] = !next[key];
+    this.workingConfig = { ...this.workingConfig, charts: next };
+  }
 }

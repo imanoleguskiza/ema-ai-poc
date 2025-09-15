@@ -32,6 +32,8 @@ export interface Mention {
   Resolved?: boolean;
 }
 
+export type Topic = 'Ibuprofen' | 'COVID-19';
+
 type SortDir = 'asc' | 'desc';
 
 @Injectable({ providedIn: 'root' })
@@ -42,10 +44,17 @@ export class SupabaseService {
   private getClient() {
     if (!this.clientPromise) {
       this.clientPromise = import('@supabase/supabase-js').then(mod =>
-        mod.createClient(environment.supabaseUrl, environment.supabaseKey, { auth: { persistSession: false, autoRefreshToken: false } })
+        mod.createClient(environment.supabaseUrl, environment.supabaseKey, {
+          auth: { persistSession: false, autoRefreshToken: false }
+        })
       );
     }
     return this.clientPromise;
+  }
+
+  setTopic(topic: Topic) {
+    const mapping: Record<string, string> = (environment as any).dbNames || {};
+    this.dbname = mapping[topic] || environment.dbName;
   }
 
   async getMentionCount(): Promise<{ count: number | null; error: any }> {
@@ -115,24 +124,20 @@ export class SupabaseService {
     if (typeof f.baseProcessed === 'boolean') query = query.eq('Processed', f.baseProcessed);
     if (f.mediaType) query = query.eq('Media type', f.mediaType);
     if (f.classification) query = query.eq('Classification', f.classification);
-
     const resolved = this.normalizeBool(f.resolved);
     if (resolved !== null) query = query.eq('Resolved', resolved);
-
     const tagTerm: string = (f.tagTerm ?? '').toString().trim();
     if (tagTerm !== '') {
       const safe: string = tagTerm.replace(/[(),]/g, ' ').replace(/\s+/g, ' ').trim();
       const pattern: string = `%${safe}%`;
       query = query.ilike('Tags', pattern);
     }
-
     const titleTerm: string = (f.titleTerm ?? '').toString().trim();
     if (titleTerm !== '') {
       const safe: string = titleTerm.replace(/[(),]/g, ' ').replace(/\s+/g, ' ').trim();
       const pattern: string = `%${safe}%`;
       query = query.ilike('Detail', pattern);
     }
-
     return query;
   }
 
@@ -146,7 +151,7 @@ export class SupabaseService {
     const supabase = await this.getClient();
     let query = supabase.from(this.dbname).select('*', { count: 'exact' }).range(from, to);
     query = this.applyFiltersV2(query, filters);
-    const allowed = new Set(['id','Publish date','Media type','Classification','Processed','Resolved']);
+    const allowed = new Set(['id', 'Publish date', 'Media type', 'Classification', 'Processed', 'Resolved']);
     if (sortColumn && allowed.has(sortColumn)) {
       query = query.order(sortColumn, { ascending: sortDirection === 'asc', nullsFirst: false });
     } else {
@@ -167,9 +172,15 @@ export class SupabaseService {
   private async distinctValues(column: string): Promise<string[]> {
     const supabase = await this.getClient();
     const selectCol = this.quoteIfNeeded(column);
-    const { data, error } = await supabase.from(this.dbname).select(selectCol).not(column, 'is', null).order(column, { ascending: true });
+    const { data, error } = await supabase
+      .from(this.dbname)
+      .select(selectCol)
+      .not(column, 'is', null)
+      .order(column, { ascending: true });
     if (error) return [];
-    const vals = ((data as Record<string, string | null>[] | null) ?? []).map(r => r[column] ?? null).filter((v: string | null): v is string => v !== null);
+    const vals = ((data as Record<string, string | null>[] | null) ?? [])
+      .map(r => r[column] ?? null)
+      .filter((v: string | null): v is string => v !== null);
     return Array.from(new Set(vals));
   }
 
@@ -181,13 +192,17 @@ export class SupabaseService {
 
   async getCountsByMediaType(): Promise<{ name: string; y: number }[]> {
     const values: string[] = await this.distinctValues('Media type');
-    const pairs = await Promise.all(values.map(async v => ({ name: v || 'N/A', y: await this.headCountEq('Media type', v) })));
+    const pairs = await Promise.all(
+      values.map(async v => ({ name: v || 'N/A', y: await this.headCountEq('Media type', v) }))
+    );
     return pairs.sort((a, b) => b.y - a.y);
   }
 
   async getCountsByClassification(): Promise<{ name: string; y: number }[]> {
     const values: string[] = await this.distinctValues('Classification');
-    const pairs = await Promise.all(values.map(async v => ({ name: v || 'N/A', y: await this.headCountEq('Classification', v) })));
+    const pairs = await Promise.all(
+      values.map(async v => ({ name: v || 'N/A', y: await this.headCountEq('Classification', v) }))
+    );
     return pairs.sort((a, b) => b.y - a.y);
   }
 
@@ -205,12 +220,19 @@ export class SupabaseService {
   async getProcessedBreakdown(): Promise<{ name: string; y: number }[]> {
     const { total, processed } = await this.getProcessedAndTotal();
     const rest = Math.max(total - processed, 0);
-    return [{ name: 'Processed', y: processed },{ name: 'Not processed', y: rest }];
+    return [
+      { name: 'Processed', y: processed },
+      { name: 'Not processed', y: rest }
+    ];
   }
 
   async getAllPublishDates(): Promise<string[]> {
     const supabase = await this.getClient();
-    const { data, error } = await supabase.from(this.dbname).select('"Publish date"').not('Publish date', 'is', null).order('Publish date', { ascending: true });
+    const { data, error } = await supabase
+      .from(this.dbname)
+      .select('"Publish date"')
+      .not('Publish date', 'is', null)
+      .order('Publish date', { ascending: true });
     if (error) return [];
     return (data ?? []).map((r: any) => r['Publish date']).filter(Boolean);
   }
