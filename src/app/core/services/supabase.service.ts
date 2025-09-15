@@ -214,4 +214,10 @@ export class SupabaseService {
     if (error) return [];
     return (data ?? []).map((r: any) => r['Publish date']).filter(Boolean);
   }
+
+  async setResolved(id: number, value: boolean): Promise<boolean> {
+    const supabase = await this.getClient();
+    const { error } = await supabase.from(this.dbname).update({ Resolved: value }).eq('id', id);
+    return !error;
+  }
 }

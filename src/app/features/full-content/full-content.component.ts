@@ -1,4 +1,4 @@
-import { Component, OnInit, } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -28,7 +28,7 @@ export class FullContentComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private supabaseService: SupabaseService
-  ) { }
+  ) {}
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -38,7 +38,6 @@ export class FullContentComponent implements OnInit {
         const match = this.mention.Link.match(/status\/(\d+)/);
         this.tweetId = match ? match[1] : null;
       }
-
       this.replyText = this.mention?.Justification || '';
     }
     this.isLoading = false;
@@ -49,7 +48,7 @@ export class FullContentComponent implements OnInit {
     return `https://x.com/intent/tweet?in_reply_to=${this.tweetId}&text=${encodeURIComponent(this.replyText || '')}`;
   }
 
-  openReply(event: Event) {
+  async openReply(event: Event) {
     event.preventDefault();
     const url = this.getReplyHref();
     if (!url) return;
@@ -58,11 +57,22 @@ export class FullContentComponent implements OnInit {
     const bs = (window as any).bootstrap;
     if (modalEl && bs?.Modal?.getOrCreateInstance) {
       bs.Modal.getOrCreateInstance(modalEl).hide();
-      return;
+    } else {
+      const $ = (window as any)['$'];
+      if (modalEl && $?.fn?.modal) {
+        $(modalEl).modal('hide');
+      }
     }
-    const $ = (window as any)['$'];
-    if (modalEl && $?.fn?.modal) {
-      $(modalEl).modal('hide');
+    if (this.mention && this.mention.Resolved !== true) {
+      const ok = await this.supabaseService.setResolved(this.mention.id, true);
+      if (ok) {
+        this.mention = { ...this.mention, Resolved: true };
+        this.alert = 'success';
+        this.message = 'Reply sent. Marked as resolved.';
+      } else {
+        this.alert = 'warning';
+        this.message = 'Reply sent, but it could not be marked as resolved.';
+      }
     }
   }
 
@@ -102,10 +112,8 @@ export class FullContentComponent implements OnInit {
 
   async deleteMention() {
     if (!this.mention) return;
-
     const confirmed = confirm('Are you sure you want to remove this mention?');
     if (!confirmed) return;
-
     const success = await this.supabaseService.deleteMention(this.mention.id);
     if (success) {
       alert('✅ Mention successfully removed.');
@@ -117,9 +125,7 @@ export class FullContentComponent implements OnInit {
 
   async processMention() {
     if (!this.mention || this.isProcessing) return;
-
     this.isProcessing = true;
-
     try {
       const response = await fetch('https://prototypepocvertexdisinformation-vertex.app.dev.techhubnttdata.com/verify', {
         method: 'POST',
@@ -129,20 +135,15 @@ export class FullContentComponent implements OnInit {
         },
         body: JSON.stringify({ statement: this.mention.Detail })
       });
-
       if (!response.ok) throw new Error('Error in the request');
-
       const result = await response.json();
-
       const updatedMention = {
         ...this.mention,
         Processed: true,
         Classification: result.classification,
         Justification: result.justification
       };
-
       const success = await this.supabaseService.updateMention(this.mention.id, updatedMention);
-
       if (success) {
         this.mention = updatedMention;
         this.alert = 'success';
@@ -167,5 +168,4 @@ export class FullContentComponent implements OnInit {
       .map(tag => tag.trim())
       .filter(tag => tag.length > 0);
   }
-
 }
