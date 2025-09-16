@@ -524,6 +524,7 @@ export class DashboardComponent implements OnInit {
     } catch {}
     this.applyTopicToService(this.config.topic);
     this.configModalOpen = false;
+    $('#configModal').modal('hide');
     const topicChanged = prevDb !== this.supabaseService.dbname;
     if (topicChanged) {
       this.chartsMount = false;
@@ -531,7 +532,6 @@ export class DashboardComponent implements OnInit {
       setTimeout(() => { this.chartsMount = true; }, 0);
       await Promise.all([this.reloadAllProcessed(), this.uReloadAll()]);
     }
-    $('#configModal').modal('hide');
   }
   loadConfig() {
     try {
