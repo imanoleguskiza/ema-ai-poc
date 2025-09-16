@@ -55,7 +55,7 @@ export class ResolvedGaugeComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   async ngOnInit() {
-    const { total, resolved } = await this.countResolvedWithFallback();
+    const { total, resolved } = await this.supabaseSvc.getResolvedAndTotal();
     const notResolved = Math.max(total - resolved, 0);
     this.seriesData = [
       { name: 'Resolved', y: resolved, color: this.colors[0] },
@@ -84,27 +84,6 @@ export class ResolvedGaugeComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.chart) {
       this.chart.destroy();
       this.chart = null;
-    }
-  }
-
-  private async countResolvedWithFallback(): Promise<{ total: number; resolved: number }> {
-    try {
-      const supaMod = await import('@supabase/supabase-js');
-      const createClient = (supaMod as any).createClient as typeof import('@supabase/supabase-js').createClient;
-      const supa = createClient(environment.supabaseUrl, environment.supabaseKey, {
-        auth: { persistSession: false, autoRefreshToken: false }
-      });
-      const table = environment.dbName;
-      const totalRes = await supa.from(table).select('id', { count: 'exact', head: true });
-      const total = totalRes.count ?? 0;
-      const resolvedRes = await supa.from(table).select('id', { count: 'exact', head: true }).eq('Resolved', true);
-      if (!resolvedRes.error) {
-        return { total, resolved: resolvedRes.count ?? 0 };
-      }
-      const { total: t2, processed } = await this.supabaseSvc.getProcessedAndTotal();
-      return { total: t2, resolved: processed };
-    } catch {
-      return { total: 0, resolved: 0 };
     }
   }
 

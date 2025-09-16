@@ -1,10 +1,8 @@
 export const environment = {
-  production: false,
-  authMode: 'mock' as 'mock' | 'api',
+  production: true,
+  authMode: 'api' as 'mock' | 'api',
   apiBaseUrl: '/api',
-  seedUsers: [
-    { email: 'emaaipoc', password: 'emaaipoc' }
-  ],
+  seedUsers: [],
   dbName: 'social_mentions',
   dbNameIbuprofen: 'social_mentions',
   dbNameCovid: 'social_mentions_covid19',

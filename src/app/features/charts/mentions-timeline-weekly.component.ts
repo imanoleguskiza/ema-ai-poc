@@ -51,7 +51,7 @@ export class MentionsTimelineWeeklyComponent implements OnInit {
       },
       style:{ color: '#FFFFFF', fontSize:'1em' }
     },
-    lang: { noData: 'Sin datos para mostrar' },
+    lang: { noData: 'No data to show' },
     series: [{
       type: 'area',
       name: 'Mentions',
@@ -75,7 +75,7 @@ export class MentionsTimelineWeeklyComponent implements OnInit {
     try {
       const dates = await this.supabase.getAllPublishDates();
       if (dates.length === 0) {
-        (this.chart as any)?.showNoData?.('Sin datos para mostrar');
+        (this.chart as any)?.showNoData?.('No data to show');
         return;
       }
 
