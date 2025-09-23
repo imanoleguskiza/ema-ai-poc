@@ -37,11 +37,6 @@
           <app-processed-gauge></app-processed-gauge>
         </div>
       </div>
-      <div class="column--12 column--lg-6" *ngIf="config.charts.mediaType">
-        <div class="highcharts-panel">
-          <app-media-type-gauge></app-media-type-gauge>
-        </div>
-      </div>
       <div class="column--12 column--lg-6" *ngIf="config.charts.resolved">
         <div class="highcharts-panel">
           <app-resolved-gauge></app-resolved-gauge>
@@ -50,6 +45,11 @@
       <div class="column--12 column--lg-6" *ngIf="config.charts.classification">
         <div class="highcharts-panel">
           <app-classification-gauge></app-classification-gauge>
+        </div>
+      </div>
+      <div class="column--12 column--lg-6" *ngIf="config.charts.mediaType">
+        <div class="highcharts-panel">
+          <app-media-type-gauge></app-media-type-gauge>
         </div>
       </div>
     </div>
@@ -72,11 +72,6 @@
           <div class="col-md-3">
             <label>Search text:</label>
             <input type="text" class="form-control" placeholder="Type to search…" [(ngModel)]="pf.titleTerm"
-              (ngModelChange)="applyProcessedFilters()">
-          </div>
-          <div class="col-md-3">
-            <label>Search by tag:</label>
-            <input type="text" class="form-control" placeholder="Type a tag…" [(ngModel)]="pf.tagTerm"
               (ngModelChange)="applyProcessedFilters()">
           </div>
           <div class="col-md-2">
@@ -135,7 +130,6 @@
                     *ngIf="pSort.column === 'Publish date'">{{ pSort.dir === 'asc' ? '▲' : '▼' }}</span></th>
                 <th (click)="sortProcessedBy('Media type')" class="sorting">Media type <span
                     *ngIf="pSort.column === 'Media type'">{{ pSort.dir === 'asc' ? '▲' : '▼' }}</span></th>
-                <th>Tags</th>
                 <th (click)="sortProcessedBy('Classification')" class="sorting">Classification <span
                     *ngIf="pSort.column === 'Classification'">{{ pSort.dir === 'asc' ? '▲' : '▼' }}</span></th>
                 <th>Resolved</th>
@@ -151,14 +145,11 @@
                 <td><input type="checkbox" [(ngModel)]="selectedProcessed[m.id]"
                     (ngModelChange)="syncAllProcessedSelected()"></td>
                 <td>{{ m.id }}</td>
-                <td class="td-medium">
+                <td class="td-big">
                   <p>{{ m.Detail }}</p>
                 </td>
                 <td>{{ m['Publish date'] }}</td>
                 <td>{{ m['Media type'] }}</td>
-                <td class="td-medium">
-                  <p>{{ m.Tags }}</p>
-                </td>
                 <td>{{ m.Classification }}</td>
                 <td>
                   <span *ngIf="m['Resolved'] === true" class="badge bg-success">Yes</span>
@@ -240,7 +231,6 @@
                     *ngIf="naSort.column === 'Publish date'">{{ naSort.dir === 'asc' ? '▲' : '▼' }}</span></th>
                 <th (click)="sortNABy('Media type')" class="sorting">Media type <span
                     *ngIf="naSort.column === 'Media type'">{{ naSort.dir === 'asc' ? '▲' : '▼' }}</span></th>
-                <th>Tags</th>
                 <th (click)="sortNABy('Classification')" class="sorting">Classification <span
                     *ngIf="naSort.column === 'Classification'">{{ naSort.dir === 'asc' ? '▲' : '▼' }}</span></th>
                 <th>Resolved</th>
@@ -254,14 +244,11 @@
               <tr *ngFor="let m of processedNA; trackBy: trackById">
                 <td><input type="checkbox" [(ngModel)]="selectedNA[m.id]" (ngModelChange)="syncAllNASelected()"></td>
                 <td>{{ m.id }}</td>
-                <td class="td-medium">
+                <td class="td-big">
                   <p>{{ m.Detail }}</p>
                 </td>
                 <td>{{ m['Publish date'] }}</td>
                 <td>{{ m['Media type'] }}</td>
-                <td class="td-medium">
-                  <p>{{ m.Tags }}</p>
-                </td>
                 <td>{{ m.Classification }}</td>
                 <td>
                   <span *ngIf="m['Resolved'] === true" class="badge bg-success">Yes</span>
@@ -318,11 +305,6 @@
               (ngModelChange)="applyUnprocessedFilters()">
           </div>
           <div class="col-md-4">
-            <label>Search by tag:</label>
-            <input type="text" class="form-control" placeholder="Type a tag…" [(ngModel)]="uf.tagTerm"
-              (ngModelChange)="applyUnprocessedFilters()">
-          </div>
-          <div class="col-md-4">
             <label>Media type:</label>
             <select class="form-control" [(ngModel)]="uf.mediaType" (change)="applyUnprocessedFilters()">
               <option value="">All</option>
@@ -364,7 +346,6 @@
                     *ngIf="uSort.column === 'Publish date'">{{ uSort.dir === 'asc' ? '▲' : '▼' }}</span></th>
                 <th (click)="sortUnprocessedBy('Media type')" class="sorting">Media type <span
                     *ngIf="uSort.column === 'Media type'">{{ uSort.dir === 'asc' ? '▲' : '▼' }}</span></th>
-                <th>Tags</th>
                 <th>Link</th>
               </tr>
             </thead>
@@ -376,14 +357,11 @@
                 <td><input type="checkbox" [(ngModel)]="selectedUnprocessed[m.id]"
                     (ngModelChange)="syncAllUnprocessedSelected()"></td>
                 <td>{{ m.id }}</td>
-                <td class="td-medium">
+                <td class="td-big">
                   <p>{{ m.Detail }}</p>
                 </td>
                 <td>{{ m['Publish date'] }}</td>
                 <td>{{ m['Media type'] }}</td>
-                <td class="td-medium">
-                  <p>{{ m.Tags }}</p>
-                </td>
                 <td>
                   <button class="btn btn-info btn-sm btn-block" [routerLink]="['/full-content', m.id]">
                     <span>Review</span><span class="fa fa-angle-right" aria-hidden="true"></span>
@@ -683,24 +661,6 @@
               </div>
             </div>
 
-            <div class="col-sm-6 col-md-4" (click)="toggleChart('mediaType')" style="cursor:pointer;">
-              <div class="card" style="padding:8px; border:1px solid #ddd; border-radius:6px;"
-                [style.border]="workingConfig.charts.mediaType ? '2px solid #22c55e' : '1px solid #ddd'"
-                [style.boxShadow]="workingConfig.charts.mediaType ? '0 0 0 3px rgba(34,197,94,.15) inset' : 'none'">
-                <div style="display:flex; align-items:center; justify-content:space-between;">
-                  <strong style="font-size:13px;">Media type donut</strong>
-                  <input type="checkbox" [checked]="workingConfig.charts.mediaType"
-                    (click)="$event.stopPropagation(); toggleChart('mediaType')">
-                </div>
-                <div
-                  style="margin-top:8px; height:68px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#f5f5f5,#ebebeb); border-radius:4px;">
-                  <div
-                    style="width:46px; height:46px; border-radius:50%; border:8px solid #ddd; border-top-color:#bbb;">
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div class="col-sm-6 col-md-4" (click)="toggleChart('resolved')" style="cursor:pointer;">
               <div class="card" style="padding:8px; border:1px solid #ddd; border-radius:6px;"
                 [style.border]="workingConfig.charts.resolved ? '2px solid #22c55e' : '1px solid #ddd'"
@@ -727,6 +687,24 @@
                   <strong style="font-size:13px;">Classification donut</strong>
                   <input type="checkbox" [checked]="workingConfig.charts.classification"
                     (click)="$event.stopPropagation(); toggleChart('classification')">
+                </div>
+                <div
+                  style="margin-top:8px; height:68px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#f5f5f5,#ebebeb); border-radius:4px;">
+                  <div
+                    style="width:46px; height:46px; border-radius:50%; border:8px solid #ddd; border-top-color:#bbb;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4" (click)="toggleChart('mediaType')" style="cursor:pointer;">
+              <div class="card" style="padding:8px; border:1px solid #ddd; border-radius:6px;"
+                [style.border]="workingConfig.charts.mediaType ? '2px solid #22c55e' : '1px solid #ddd'"
+                [style.boxShadow]="workingConfig.charts.mediaType ? '0 0 0 3px rgba(34,197,94,.15) inset' : 'none'">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <strong style="font-size:13px;">Media type donut</strong>
+                  <input type="checkbox" [checked]="workingConfig.charts.mediaType"
+                    (click)="$event.stopPropagation(); toggleChart('mediaType')">
                 </div>
                 <div
                   style="margin-top:8px; height:68px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#f5f5f5,#ebebeb); border-radius:4px;">

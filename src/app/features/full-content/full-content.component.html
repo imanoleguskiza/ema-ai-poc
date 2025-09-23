@@ -95,12 +95,12 @@
                 <a [href]="mention.Link" target="_blank">{{ mention.Link }}</a>
                 }
             </p>
-            @if (mention.Tags) {
+            <!--@if (mention.Tags) {
                 <p><strong>Tags:</strong></p>
                 <ng-container *ngFor="let tag of getTagsArray(mention.Tags)">
                     <span class="badge mr-1">{{ tag }}</span>
                 </ng-container>
-            }
+            }-->
             
             <div class="accordion-group top-gutter" data-accordion-group>
                 <div class="accordion accordion-sm">
@@ -114,9 +114,6 @@
                             }
                             @if (mention['Publish date']) {
                                 <p><strong>Publish Date:</strong> {{ mention['Publish date'] }}</p>
-                            }
-                            @if (mention.Sentiment) {
-                                <p><strong>Sentiment:</strong> {{ mention.Sentiment }} </p>
                             }
                             @if (mention.Ranking) {
                                 <p><strong>Ranking:</strong> {{ mention.Ranking }}</p>

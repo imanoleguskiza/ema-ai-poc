@@ -119,10 +119,10 @@ export class FullContentComponent implements OnInit {
     if (success) {
       this.mention = this.editableMention;
       this.isEditing = false;
-      this.message = '✅ Changes saved successfully.';
+      this.message = 'Changes saved successfully.';
       this.alert = 'success';
     } else {
-      this.message = '❌ Error saving changes.';
+      this.message = 'Error saving changes.';
       this.alert = 'danger';
     }
   }
@@ -133,10 +133,10 @@ export class FullContentComponent implements OnInit {
     if (!confirmed) return;
     const success = await this.supabaseService.deleteMention(this.mention.id);
     if (success) {
-      alert('✅ Mention successfully removed.');
+      alert('Mention successfully removed.');
       this.router.navigate(['/']);
     } else {
-      alert('❌ Error deleting mention.');
+      alert('Error deleting mention.');
     }
   }
 
@@ -165,6 +165,7 @@ export class FullContentComponent implements OnInit {
         this.mention = updatedMention;
         this.alert = 'success';
         this.message = 'Processed successfully.';
+        this.replyText = this.mention?.Justification || '';
       } else {
         this.alert = 'warning';
         this.message = 'The "processed" state could not be saved.';
