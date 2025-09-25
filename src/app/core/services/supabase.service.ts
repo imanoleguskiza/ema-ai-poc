@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 
-export type Topic = 'Ibuprofen' | 'COVID-19';
+export type Topic = 'Ibuprofen' | 'COVID-19' | 'Paracetamol';
 
 export interface Mention {
   id: number;
@@ -53,6 +53,7 @@ export class SupabaseService {
   setTopic(topic: Topic) {
     if (topic === 'Ibuprofen') this.dbname = environment.dbNameIbuprofen || environment.dbName || this.dbname;
     else if (topic === 'COVID-19') this.dbname = environment.dbNameCovid || environment.dbName || this.dbname;
+    else if (topic === 'Paracetamol') this.dbname = environment.dbNameParacetamol || environment.dbName || this.dbname;
   }
 
   async getMentionCount(): Promise<{ count: number | null; error: any }> {
