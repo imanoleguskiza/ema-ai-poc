@@ -57,15 +57,10 @@ export class ClassificationGaugeComponent implements OnInit, AfterViewInit, OnDe
     this.seriesData = rows
       .filter(r => (r.name || '') !== 'Not applicable')
       .map(r => ({ name: r.name || 'N/A', y: r.y || 0 }));
-    try {
-      const { total, processed } = await this.supabase.getProcessedAndTotal();
-      const pending = Math.max((total || 0) - (processed || 0), 0);
-      this.subtitleText = total > 0
-        ? `${processed} processed • ${pending} pending`
-        : 'No data';
-    } catch {
-      this.subtitleText = 'No data';
-    }
+
+    const applicableTotal = this.seriesData.reduce((sum, p) => sum + Number((p as any).y || 0), 0);
+    this.subtitleText = applicableTotal > 0 ? `${applicableTotal} applicable` : 'No data';
+
     this.renderIfReady();
   }
 
