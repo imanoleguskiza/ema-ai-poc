@@ -241,4 +241,18 @@ export class SupabaseService {
     const resolved = resolvedRes.count ?? 0;
     return { total, resolved: Math.min(resolved, total) };
   }
+
+  async getProcessedApplicableBreakdown(): Promise<{ name: string; y: number }[]> {
+    const supabase = await this.getClient();
+    const [naRes, applicableRes] = await Promise.all([
+      supabase.from(this.dbname).select('id', { count: 'exact', head: true }).eq('Processed', true).eq('Classification', 'Not applicable'),
+      supabase.from(this.dbname).select('id', { count: 'exact', head: true }).eq('Processed', true).not('Classification', 'is', null).neq('Classification', 'Not applicable')
+    ]);
+    const na = naRes.count ?? 0;
+    const applicable = applicableRes.count ?? 0;
+    return [
+      { name: 'Applicable', y: applicable },
+      { name: 'Not applicable', y: na }
+    ];
+  }
 }

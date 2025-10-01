@@ -14,7 +14,7 @@ import { SupabaseService } from '../../core/services/supabase.service';
 
 @Component({
   standalone: true,
-  selector: 'app-processed-gauge',
+  selector: 'app-processed-applicable-gauge',
   imports: [CommonModule],
   template: `
     <div class="w-full h-full">
@@ -25,7 +25,7 @@ import { SupabaseService } from '../../core/services/supabase.service';
     </div>
   `
 })
-export class ProcessedGaugeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProcessedApplicableGaugeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('chartEl', { static: false }) chartEl!: ElementRef<HTMLDivElement>;
 
   private chart: Highcharts.Chart | null = null;
@@ -34,7 +34,6 @@ export class ProcessedGaugeComponent implements OnInit, AfterViewInit, OnDestroy
 
   private seriesData: Highcharts.PointOptionsObject[] = [];
   private subtitleText = 'No data';
-  private colors = ['#0072bc', '#abb3b8'];
 
   private HC: typeof import('highcharts') | null = null;
 
@@ -54,37 +53,22 @@ export class ProcessedGaugeComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   async ngOnInit() {
-    try {
-      const { total, processed } = await this.supabase.getProcessedAndTotal();
-      const notProcessed = Math.max((total || 0) - (processed || 0), 0);
-
-      this.seriesData = [
-        { name: 'Processed by Claim Detector', y: processed || 0, color: this.colors[0] },
-        { name: 'Not processed by Claim Detector', y: notProcessed, color: this.colors[1] }
-      ];
-
-      const pct = total > 0 ? Number((((processed ?? 0) / total) * 100).toFixed(2)) : 0;
-      this.subtitleText = total > 0
-        ? `Processed by Claim Detector • ${pct}% (${processed}/${total})`
-        : 'No data';
-    } catch {
-      this.seriesData = [
-        { name: 'Processed by Claim Detector', y: 0, color: this.colors[0] },
-        { name: 'Not processed by Claim Detector', y: 0, color: this.colors[1] }
-      ];
-      this.subtitleText = 'No data';
-    }
-
+    const pairs = await this.supabase.getProcessedApplicableBreakdown();
+    const na = pairs.find(p => p.name === 'Not applicable')?.y ?? 0;
+    const applicable = pairs.find(p => p.name === 'Applicable')?.y ?? 0;
+    this.seriesData = [
+      { name: 'Applicable', y: applicable },
+      { name: 'Not applicable', y: na }
+    ];
+    const total = na + applicable;
+    this.subtitleText = total > 0 ? `${applicable} applicable • ${na} not applicable` : 'No data';
     this.renderIfReady();
   }
 
   ngAfterViewInit() {
     this.renderIfReady();
-
     if (this.isBrowser && this.chartEl?.nativeElement) {
-      this.ro = new ResizeObserver(() => {
-        if (this.chart) this.chart.reflow();
-      });
+      this.ro = new ResizeObserver(() => { if (this.chart) this.chart.reflow(); });
       this.ro.observe(this.chartEl.nativeElement);
     }
   }
@@ -114,7 +98,7 @@ export class ProcessedGaugeComponent implements OnInit, AfterViewInit, OnDestroy
         height: null,
         styledMode: true
       },
-      title: { text: 'Processed by Claim Detector', align: 'left', margin: 28 },
+      title: { text: 'Applicable vs Not applicable', align: 'left', margin: 28 },
       subtitle: { text: this.subtitleText },
       credits: { enabled: false },
       legend: { enabled: false },

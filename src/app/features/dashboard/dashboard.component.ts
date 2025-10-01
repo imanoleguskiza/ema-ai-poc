@@ -12,6 +12,7 @@ import { ProcessedGaugeComponent } from '../charts/processed-gauge.component';
 import { MentionsCounterBannerComponent } from '../charts/mentions-counter-banner.component';
 import { MentionsTimelineWeeklyComponent } from '../charts/mentions-timeline-weekly.component';
 import { ResolvedGaugeComponent } from '../charts/resolved-gauge.component';
+import { ProcessedApplicableGaugeComponent } from '../charts/processed-applicable-gauge.component';
 import { environment } from '../../environments/environment';
 
 declare var $: any;
@@ -26,6 +27,7 @@ type DashboardConfig = {
     mediaType: boolean;
     resolved: boolean;
     classification: boolean;
+    processedApplicable: boolean;
   };
   tables: {
     processedPendingResolved: boolean;
@@ -39,14 +41,15 @@ const DEFAULT_CONFIG: DashboardConfig = {
   topic: 'Ibuprofen',
   charts: {
     overview: true,
-    processed: true,
+    processed: false,
     mediaType: true,
     resolved: true,
-    classification: true
+    classification: true,
+    processedApplicable: true
   },
   tables: {
     processedPendingResolved: true,
-    processedNA: true,
+    processedNA: false,
     unprocessed: true
   },
   showNewMentionButton: true
@@ -63,7 +66,8 @@ const DEFAULT_CONFIG: DashboardConfig = {
     ProcessedGaugeComponent,
     MentionsCounterBannerComponent,
     MentionsTimelineWeeklyComponent,
-    ResolvedGaugeComponent
+    ResolvedGaugeComponent,
+    ProcessedApplicableGaugeComponent
   ],
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html'
@@ -80,21 +84,21 @@ export class DashboardComponent implements OnInit {
   pTotalRows = 0;
   pPages: number[] = [];
   isLoadingProcessed = false;
-  pSort = { column: 'id', dir: 'asc' as SortDir };
+  pSort: { column: string; dir: SortDir } = { column: 'id', dir: 'asc' };
 
   naPage = 1;
   naTotalPages = 1;
   naTotalRows = 0;
   naPages: number[] = [];
   isLoadingNA = false;
-  naSort = { column: 'id', dir: 'asc' as SortDir };
+  naSort: { column: string; dir: SortDir } = { column: 'id', dir: 'asc' };
 
   uPage = 1;
   uTotalPages = 1;
   uTotalRows = 0;
   uPages: number[] = [];
   isLoadingUnprocessed = false;
-  uSort = { column: 'id', dir: 'asc' as SortDir };
+  uSort: { column: string; dir: SortDir } = { column: 'id', dir: 'asc' };
 
   pf = { mediaType: '', classification: '', resolved: '' as '' | boolean, tagTerm: '', titleTerm: '' };
   uf = { mediaType: '', tagTerm: '', titleTerm: '' };
@@ -422,7 +426,7 @@ export class DashboardComponent implements OnInit {
         await this.supabaseService.updateMention(id, {
           Processed: true,
           Classification: result.classification,
-          Justification: result.justification
+          Justification: result.justification + ' Processed by AI, reviewed by a human expert.'
         });
       } catch {}
     }
@@ -555,7 +559,7 @@ export class DashboardComponent implements OnInit {
     this.supabaseService.setTopic(topic);
   }
 
-  toggleChart(key: 'overview' | 'processed' | 'mediaType' | 'resolved' | 'classification') {
+  toggleChart(key: 'overview' | 'processed' | 'mediaType' | 'resolved' | 'classification' | 'processedApplicable') {
     const next = { ...this.workingConfig.charts };
     next[key] = !next[key];
     this.workingConfig = { ...this.workingConfig, charts: next };

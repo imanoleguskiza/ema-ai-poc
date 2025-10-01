@@ -54,7 +54,9 @@ export class ClassificationGaugeComponent implements OnInit, AfterViewInit, OnDe
 
   async ngOnInit() {
     const rows = await this.supabase.getCountsByClassification();
-    this.seriesData = rows.map(r => ({ name: r.name || 'N/A', y: r.y || 0 }));
+    this.seriesData = rows
+      .filter(r => (r.name || '') !== 'Not applicable')
+      .map(r => ({ name: r.name || 'N/A', y: r.y || 0 }));
     try {
       const { total, processed } = await this.supabase.getProcessedAndTotal();
       const pending = Math.max((total || 0) - (processed || 0), 0);

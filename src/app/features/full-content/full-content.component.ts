@@ -158,7 +158,7 @@ export class FullContentComponent implements OnInit {
         ...this.mention,
         Processed: true,
         Classification: result.classification,
-        Justification: result.justification
+        Justification: result.justification + ' Processed by AI, reviewed by a human expert.'
       };
       const success = await this.supabaseService.updateMention(this.mention.id, updatedMention);
       if (success) {
