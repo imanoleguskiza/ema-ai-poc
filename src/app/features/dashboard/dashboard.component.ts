@@ -137,7 +137,7 @@ export class DashboardComponent implements OnInit {
     private auth: AuthService,
     private router: Router,
     private supabaseService: SupabaseService
-  ) {}
+  ) { }
 
   get pStartItem(): number {
     return this.pTotalRows === 0 ? 0 : (this.pPage - 1) * this.pageSize + 1;
@@ -201,14 +201,25 @@ export class DashboardComponent implements OnInit {
   }
 
   async pRefreshCount() {
-    const { count } = await this.supabaseService.getFilteredCountV2({
+    const base: any = {
       baseProcessed: true,
       mediaType: this.pf.mediaType,
       classificationNot: 'Not applicable',
-      resolvedNullOrFalse: true,
       tagTerm: this.pf.tagTerm,
       titleTerm: this.pf.titleTerm
-    });
+    };
+
+    if (this.pf.classification && this.pf.classification.trim() !== '') {
+      base.classification = this.pf.classification;
+    }
+
+    if (this.pf.resolved === true) {
+      base.resolved = true;
+    } else if (this.pf.resolved === false) {
+      base.resolvedNullOrFalse = true;
+    }
+
+    const { count } = await this.supabaseService.getFilteredCountV2(base);
     this.pTotalRows = count || 0;
     this.pTotalPages = Math.max(1, Math.ceil(this.pTotalRows / this.pageSize));
     this.pPages = Array.from({ length: this.pTotalPages }, (_, i) => i + 1);
@@ -232,17 +243,29 @@ export class DashboardComponent implements OnInit {
     const to = from + this.pageSize - 1;
     this.pPage = page;
     this.isLoadingProcessed = true;
+
+    const base: any = {
+      baseProcessed: true,
+      mediaType: this.pf.mediaType,
+      classificationNot: 'Not applicable',
+      tagTerm: this.pf.tagTerm,
+      titleTerm: this.pf.titleTerm
+    };
+
+    if (this.pf.classification && this.pf.classification.trim() !== '') {
+      base.classification = this.pf.classification;
+    }
+
+    if (this.pf.resolved === true) {
+      base.resolved = true;
+    } else if (this.pf.resolved === false) {
+      base.resolvedNullOrFalse = true;
+    }
+
     const { data } = await this.supabaseService.getMentionsFilteredV2(
       from,
       to,
-      {
-        baseProcessed: true,
-        mediaType: this.pf.mediaType,
-        classificationNot: 'Not applicable',
-        resolvedNullOrFalse: true,
-        tagTerm: this.pf.tagTerm,
-        titleTerm: this.pf.titleTerm
-      },
+      base,
       this.pSort.column,
       this.pSort.dir
     );
@@ -251,7 +274,7 @@ export class DashboardComponent implements OnInit {
       this.processed.map(m => m['Media type'] ?? '').filter(this.notEmptyString)
     );
     this.classificationsProcessed = this.extractDistinct(
-      this.processed.map(m => m.Classification ?? '').filter(this.notEmptyString)
+      this.processed.map(m => m.Classification ?? '').filter(this.notEmptyString).filter(c => c !== 'Not applicable')
     );
     this.resetProcessedSelection();
     this.isLoadingProcessed = false;
@@ -428,7 +451,7 @@ export class DashboardComponent implements OnInit {
           Classification: result.classification,
           Justification: result.justification + ' Processed by AI, reviewed by a human expert.'
         });
-      } catch {}
+      } catch { }
     }
 
     if (forKey === 'processed') this.processingProcessed = false;
@@ -525,7 +548,7 @@ export class DashboardComponent implements OnInit {
     this.config = JSON.parse(JSON.stringify(this.workingConfig));
     try {
       localStorage.setItem('dashboardConfig', JSON.stringify(this.config));
-    } catch {}
+    } catch { }
     this.applyTopicToService(this.config.topic);
     this.configModalOpen = false;
     $('#configModal').modal('hide');
